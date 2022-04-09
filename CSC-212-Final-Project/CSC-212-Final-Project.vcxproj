@@ -155,6 +155,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CSC-212-Final-Project.cpp" />
+    <ClCompile Include="RBTree.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CSC-212-Final-Project.h" />
+    <ClInclude Include="RBTree.h" />
+    <ClInclude Include="TransformHelper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
