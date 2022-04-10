@@ -29,8 +29,5 @@
     <ClInclude Include="TransformHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CSC-212-Final-Project.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

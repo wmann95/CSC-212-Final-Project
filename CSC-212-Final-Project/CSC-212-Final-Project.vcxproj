@@ -158,7 +158,6 @@
     <ClCompile Include="RBTree.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CSC-212-Final-Project.h" />
     <ClInclude Include="RBTree.h" />
     <ClInclude Include="TransformHelper.h" />
   </ItemGroup>

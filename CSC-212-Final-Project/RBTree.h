@@ -23,6 +23,7 @@ private:
 		void draw(sf::RenderWindow* window);
 		void update(long long int millis);
 		void setTarget(sf::Vector2f target);
+		void registerNode();
 
 		friend class RBTree;
 	};

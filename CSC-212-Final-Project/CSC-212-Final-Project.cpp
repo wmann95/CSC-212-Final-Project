@@ -2,14 +2,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Clock.hpp>
 #include "RBTree.h"
-#include "CSC-212-Final-Project.h"
 
 int main()
 {
 
 	sf::RenderWindow window(sf::VideoMode(800, 600), "SFML Works!");
 	RBTree tree;
-
 
 	// How many frames per second and updates per second that should be done.
 	int fps = 60;
