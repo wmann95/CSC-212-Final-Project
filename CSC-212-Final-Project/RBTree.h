@@ -5,6 +5,8 @@
 
 #include <string>
 #include <iostream> 
+#include <functional>
+#include <ostream>
 
 
 class RBTNode {
@@ -13,9 +15,7 @@ private:
 	int counter;
 	RBTNode* left;
 	RBTNode* right;
-	bool red = false;
-
-	void swapColor() { red != red; }
+	bool red;
 
 public:
 	RBTNode();
@@ -30,7 +30,7 @@ class RBTree {
 private:
 	RBTNode* root;
 
-	RBTNode* insert(int word, RBTNode* root);
+	RBTNode* insert(std::string word, RBTNode* root);
 	int height(RBTNode* root);
 
 	void preorder(RBTNode* root, std::ostream& os);
@@ -38,7 +38,7 @@ private:
 	void postorder(RBTNode* root, std::ostream& os);
 
 	void destroy(RBTNode* root);
-	bool search(int word, RBTNode* root);
+	bool search(std::string word, RBTNode* root);
 
 	RBTNode* rotateLeft(RBTNode* root);
 	RBTNode* rotateRight(RBTNode* root);
@@ -50,14 +50,16 @@ public:
 	RBTree();
 	~RBTree();
 
-	void insert(int word);
+	int value(std::string word);
+
+	void insert(std::string word);
 	int height();
 
 	void preorder(std::ostream& os = std::cout);
 	void inorder(std::ostream& os = std::cout);
 	void postorder(std::ostream& os = std::cout);
 
-	bool search(int word);
+	bool search(std::string word);
 	void clear();
 };
 
