@@ -13,14 +13,15 @@ class RBTNode {
 private:
 	std::string word;
 	int counter;
-	RBTNode* left;
-	RBTNode* right;
-	bool red;
 
 public:
 	RBTNode();
 	RBTNode(std::string word);
 	~RBTNode();
+	RBTNode* left;
+	RBTNode* right;
+	bool red;
+
 
 	friend class RBTree;
 
@@ -31,7 +32,6 @@ private:
 	RBTNode* root;
 
 	RBTNode* insert(std::string word, RBTNode* root);
-	int height(RBTNode* root);
 
 	void preorder(RBTNode* root, std::ostream& os);
 	void inorder(RBTNode* root, std::ostream& os);
@@ -50,7 +50,11 @@ public:
 	RBTree();
 	~RBTree();
 
+	int height(RBTNode* root);
+
+	RBTNode* top();
 	int value(std::string word);
+	int recalculate_value(std::string word);
 
 	void insert(std::string word);
 	int height();

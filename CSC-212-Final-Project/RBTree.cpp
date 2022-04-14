@@ -10,7 +10,7 @@ RBTNode::RBTNode() {
 	this->counter = 0;
 	this->left = nullptr;
 	this->right = nullptr;
-	red = false;
+	red = true;
 }
 
 RBTNode::RBTNode(std::string word) {
@@ -18,7 +18,7 @@ RBTNode::RBTNode(std::string word) {
 	this->counter = 1;
 	this->left = nullptr;
 	this->right = nullptr;
-	red = false;
+	red = true;
 }
 
 RBTNode::~RBTNode() {
@@ -27,9 +27,18 @@ RBTNode::~RBTNode() {
 
 int RBTree::value(std::string word){
 	int sum = 0;
-	for (int i = 0; i < word.size(); i++){
-		char x = std::tolower(word[i]);
-		sum += int(x);
+	for (int i = 1; i <= word.size(); i++){
+		char x = std::tolower(word[i - 1]);
+		sum += int(x) * i;
+	}
+	return sum;
+}
+
+int RBTree::recalculate_value(std::string word){
+	int sum = 0;
+	for (int i = 1; i <= word.size(); i++){
+		char x = std::tolower(word[word.size() - i]);
+		sum += int(x) * i;
 	}
 	return sum;
 }
@@ -38,41 +47,50 @@ RBTNode* RBTree::insert(std::string word, RBTNode* root) {
 	if (!root) {
 		return new RBTNode(word);
 	}
-
-	if (value(word) == value(root->word)){
+	int word_val = value(word);
+	int root_val = value(root->word);
+	if (word_val == root_val){
 		if (word == root->word){
 			root->counter++;
-			//ADD MORE
+		}else{
+			std::cout << "duplicate" << std::endl;
 		}
 	}
-
-	else if (value(word) < value(root->word)) {
+	if (word_val < root_val) {
 		root->left = insert(word, root->left);
 		root->left->red = true;
-		std::cout << "l" << std::endl;
 	}
-	else{
+	else if (word_val > root_val){
 		root->right = insert(word, root->right);
 		root->right->red = true;
-		std::cout << "r" << std::endl;
 	}
-	
-	if (isRed(root->right)) {
+	bool good = false;
+	while (!good){
+		bool change = false;
+
+	if (isRed(root->right) && !isRed(root->left)) {
 		root = rotateLeft(root);
+		std::cout << "Left" << std::endl;
+		change = true;
 	}
 
 	if (isRed(root->left) && isRed(root->left->left)) {
 		root = rotateRight(root);
+		std::cout << "Right" << std::endl;
+		change = true;
 	}
-
+	
 	if (isRed(root->left) && isRed(root->right)) {
 		root->red = true;
 		root->left->red = false;
 		root->right->red = false;
+		change = true;
+		std::cout << "Swap" << std::endl;
 	}
 
-	if (root->red == true){
-		root->red = false;
+	if (!change){
+		good = true;
+	}
 	}
 
 	return root;
@@ -84,7 +102,7 @@ int RBTree::height(RBTNode* root) {
 	}
 	int left = height(root->left);
 	int right = height(root->right);
-
+	
 	return (left > right ? left + 1 : right + 1);
 }
 
@@ -135,6 +153,10 @@ void RBTree::destroy(RBTNode* root) {
 	delete root->right;
 }
 
+RBTNode* RBTree::top(){
+	return root;
+}
+
 bool RBTree::search(std::string word, RBTNode* root) {
 	if (!root) {
 		return false;
@@ -154,20 +176,20 @@ bool RBTree::search(std::string word, RBTNode* root) {
 
 RBTNode* RBTree::rotateLeft(RBTNode* root) {
 	RBTNode* p = root->right;
-	root->right = root->right->left;
+	root->right = p->left;
 	p->left = root;
 
-	p->red = p->left->red;
-	p->left->red = true;
+	p->red = root->red;
+	root->red = true;
 	return p;
 }
 
 RBTNode* RBTree::rotateRight(RBTNode* root) {
 	RBTNode* p = root->left;
-	root->left = root->left->right;
+	root->left = p->right;
 	p->right = root;
 
-	p->red = p->right->red;
+	p->red = root->red;
 	p->right->red = true;
 	return p;
 }
