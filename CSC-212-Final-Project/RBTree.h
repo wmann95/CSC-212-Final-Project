@@ -1,9 +1,11 @@
 #pragma once
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 #include "Renderer.h"
 
 class Renderer;
+
 
 class RBTNode {
 private:
@@ -12,6 +14,7 @@ private:
 	sf::CircleShape shape;
 	sf::Vector2f target;
 	RBTNode(Renderer* renderer, std::string in);
+
 public:
 	std::string text;
 
@@ -32,7 +35,7 @@ private:
 	RBTNode* root;
 	std::vector<RBTNode*> nodes;
 	int x, y;
-
+	sf::Vector2f target;
 public:
 	RBTree(Renderer* renderer);
 	~RBTree();
@@ -43,7 +46,12 @@ public:
 	void insert(std::string in);
 
 	void debugSetTarget(sf::Vector2f target) {
-		if (!root) return;
-		root->setTarget(target);
+		this->target = target;
+
+		for (RBTNode* node : nodes) {
+			node->setTarget(target);
+		}
 	}
+
+
 };

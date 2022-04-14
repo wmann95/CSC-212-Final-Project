@@ -44,10 +44,9 @@ RBTree::~RBTree() {
 		delete nodes[i];
 	}
 
-	nodes.clear();
 
 	if (!root) return;
-	delete root;
+	//delete root;
 }
 
 void RBTree::Draw(sf::RenderWindow* window) {
@@ -60,7 +59,10 @@ void RBTree::Draw(sf::RenderWindow* window) {
 void RBTree::Update(long long int millis) {
 	if (!root) return;
 
-	//root->update(millis);
+	for (RBTNode* node : nodes) {
+		node->update(millis);
+	}
+
 }
 
 void RBTree::insert(std::string in) {

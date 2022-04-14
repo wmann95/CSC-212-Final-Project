@@ -64,7 +64,7 @@ int main()
 			window.clear(sf::Color(171.0f, 204.0f, 214.0f, 255.0f));
 
 			// Draw stuff here
-			//tree.Draw(&window);
+			tree.Draw(&window);
 
 			renderer.Render();
 
