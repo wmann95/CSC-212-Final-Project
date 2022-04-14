@@ -1,53 +1,49 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
+#include "Renderer.h"
 
+class Renderer;
+
+class RBTNode {
+private:
+	bool red = false;
+	int x, y;
+	sf::CircleShape shape;
+	sf::Vector2f target;
+	RBTNode(Renderer* renderer, std::string in);
+public:
+	std::string text;
+
+	void draw(sf::RenderWindow* window);
+	void update(long long int millis);
+	void setTarget(sf::Vector2f target);
+
+	friend class RBTree;
+};
 
 class RBTree {
 
 
 private:
 
-	class RBTNode {
-	private:
-		bool red;
-		int x, y;
-		sf::CircleShape shape;
-		sf::Vector2f target;
-	public:
-		RBTNode() {
-			shape = sf::CircleShape(20.0f);
-			target = sf::Vector2f(0.0f, 0.0f);
-		}
-
-		void draw(sf::RenderWindow* window);
-		void update(long long int millis);
-		void setTarget(sf::Vector2f target);
-		void registerNode();
-
-		friend class RBTree;
-	};
-
-
-
+	sf::RenderWindow* window;
+	Renderer* renderer;
 	RBTNode* root;
+	std::vector<RBTNode*> nodes;
 	int x, y;
 
 public:
-	RBTree() {
-		root = new RBTNode;
-
-
-	}
-	~RBTree() {
-		//destroy();
-		delete root;
-	}
+	RBTree(Renderer* renderer);
+	~RBTree();
 
 	void Draw(sf::RenderWindow* window);
 	void Update(long long int millis);
 
+	void insert(std::string in);
+
 	void debugSetTarget(sf::Vector2f target) {
+		if (!root) return;
 		root->setTarget(target);
 	}
 };

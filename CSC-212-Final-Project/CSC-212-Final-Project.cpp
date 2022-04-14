@@ -2,12 +2,14 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Clock.hpp>
 #include "RBTree.h"
+#include "Renderer.h"
 
 int main()
 {
-
-	sf::RenderWindow window(sf::VideoMode(800, 600), "SFML Works!");
-	RBTree tree;
+	
+	sf::RenderWindow window(sf::VideoMode(800, 600), "Left-Leaning Red-Black Trees");
+	Renderer renderer(&window);
+	RBTree tree(&renderer);
 
 	// How many frames per second and updates per second that should be done.
 	int fps = 60;
@@ -17,10 +19,11 @@ int main()
 	int updates = 0;
 	int frames = 0;
 
-
+	// timers that have deltaTime added to them
 	int fpsTimer = 0;
 	int upsTimer = 0;
 	int statClock = 0;
+
 
 	sf::Clock clock;
 	sf::Vector2f target;
@@ -41,6 +44,11 @@ int main()
 				target = (sf::Vector2f)sf::Mouse::getPosition(window);
 				tree.debugSetTarget(target);
 			}
+			if (event.type == sf::Event::KeyPressed) {
+				if (event.key.code == sf::Keyboard::Space) {
+					tree.insert("Test");
+				}
+			}
 		}
 
 		// find the time since the last loop, if applicable, then reset timer to this loop time.
@@ -56,8 +64,9 @@ int main()
 			window.clear(sf::Color(171.0f, 204.0f, 214.0f, 255.0f));
 
 			// Draw stuff here
-			tree.Draw(&window);
+			//tree.Draw(&window);
 
+			renderer.Render();
 
 			// Show drawn stuff
 			window.display();
