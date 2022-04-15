@@ -31,6 +31,10 @@ int RBTree::value(std::string word) {
 	return sum;
 }
 
+bool areWordsInOrder(std::string word1, std::string word2) {
+	return word1 < word2;
+}
+
 RBTNode* RBTree::insert(std::string word, RBTNode* root, float x = 400.0f, float y = 25.0f) {
 
 	if (!root) {
@@ -38,21 +42,19 @@ RBTNode* RBTree::insert(std::string word, RBTNode* root, float x = 400.0f, float
 		node->red = true;
 		nodes.push_back(node);
 		node->target = sf::Vector2f(x, y);
-		std::cout << node->word << " : " << x << ", " << y << std::endl;
+		//std::cout << node->word << " : " << x << ", " << y << std::endl;
 
 		return node;
 	}
 
-	int cmp = word.compare(root->word);
-
-	if (cmp == 0) {
-		if (word == root->word) {
-			root->counter++;
-			//ADD MORE
-			return root;
-		}
+	if (word == root->word) {
+		root->counter++;
+		//ADD MORE
+		return root;
 	}
-	else if (cmp < 0) {
+
+
+	if(areWordsInOrder(word, root->word)){
 		root->left = insert(word, root->left, x - 50.0f, y + 30.0f);
 		root->left->red = true;
 

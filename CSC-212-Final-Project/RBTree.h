@@ -78,6 +78,10 @@ public:
 	void Update(long long int millis);
 	void Draw(sf::RenderWindow*);
 
+	RBTNode* top() {
+		return root;
+	}
+
 };
 
 /*
