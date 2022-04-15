@@ -157,6 +157,7 @@
     <ClCompile Include="CSC-212-Final-Project.cpp" />
     <ClCompile Include="RBTree.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="TransformHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RBTree.h" />

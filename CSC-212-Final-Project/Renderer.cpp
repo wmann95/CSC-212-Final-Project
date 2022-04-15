@@ -23,5 +23,5 @@ void Renderer::Render() {
 
 void Renderer::RegisterNode(RBTNode* node) {
 	nodes.push_back(node);
-	std::cout << node->text << std::endl;
+	//std::cout << node->word << std::endl;
 }

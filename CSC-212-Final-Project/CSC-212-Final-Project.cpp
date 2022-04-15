@@ -1,12 +1,12 @@
+#include "RBTree.h"
+#include "Renderer.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Clock.hpp>
-#include "RBTree.h"
-#include "Renderer.h"
 
 int main()
 {
-	
+
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Left-Leaning Red-Black Trees");
 	Renderer renderer(&window);
 	RBTree tree(&renderer);
@@ -24,6 +24,7 @@ int main()
 	int upsTimer = 0;
 	int statClock = 0;
 
+	int testCounter = 0;
 
 	sf::Clock clock;
 	sf::Vector2f target;
@@ -42,11 +43,12 @@ int main()
 			}
 			if (event.type == sf::Event::MouseButtonPressed) {
 				target = (sf::Vector2f)sf::Mouse::getPosition(window);
-				tree.debugSetTarget(target);
+				//tree.debugSetTarget(target);
 			}
 			if (event.type == sf::Event::KeyPressed) {
 				if (event.key.code == sf::Keyboard::Space) {
-					tree.insert("Test");
+					std::string s(1, char(97 + testCounter++));
+					tree.insert(s);
 				}
 			}
 		}
@@ -93,6 +95,14 @@ int main()
 
 	}
 
-	return 0;
+	std::cout << "Preorder" << std::endl;
+	tree.preorder();
 
+	std::cout << "Inorder" << std::endl;
+	tree.inorder();
+
+	std::cout << "Postorder" << std::endl;
+	tree.postorder();
+
+	return 0;
 }

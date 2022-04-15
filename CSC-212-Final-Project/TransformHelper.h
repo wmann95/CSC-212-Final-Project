@@ -1,16 +1,8 @@
 #pragma once
 #include <SFML/System/Vector2.hpp>
 
-using namespace sf;
 
 //Interpolate
-Vector2f lerp(const Vector2f& a, const Vector2f& b, float factor) {
-	if (factor < 0.0) {
-		factor = 0.0;
-	}
-	else if (factor > 1.0) {
-		factor = 1.0;
-	}
+sf::Vector2f lerp(const sf::Vector2f& a, const sf::Vector2f& b, const float factor);
 
-	return a + (b - a) * factor;
-}
+sf::Vector2f cLerp(const sf::Vector2f& a, const sf::Vector2f b, const float step);
