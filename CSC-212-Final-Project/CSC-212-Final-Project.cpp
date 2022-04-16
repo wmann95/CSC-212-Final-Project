@@ -13,7 +13,9 @@ std::vector<std::string> ReadFile(std::string file_name);
 
 int main(int argc, char* argv[]) {
 
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Left-Leaning Red-Black Trees");
+	std::string title = "Left-Leaning Red-Black Trees";
+
+	sf::RenderWindow window(sf::VideoMode(800, 600),title);
 	Renderer renderer(&window);
 	RBTree tree(&renderer);
 
@@ -33,8 +35,6 @@ int main(int argc, char* argv[]) {
 	int fpsTimer = 0;
 	int upsTimer = 0;
 	int statClock = 0;
-
-
 	sf::Clock clock;
 	sf::Vector2f target;
 
@@ -56,7 +56,9 @@ int main(int argc, char* argv[]) {
 			}
 			if (event.type == sf::Event::KeyPressed) {
 				if (event.key.code == sf::Keyboard::Space && counter < words.size()) {
-					tree.insert(words[counter++]);
+					//std::string st = "";
+					//st.push_back(testWord[(counter++) % testWord.size()]);
+					
 				}
 			}
 		}
@@ -94,7 +96,14 @@ int main(int argc, char* argv[]) {
 
 		// Shows current frames per second and updates per second.
 		if (statClock >= 1000) {
-			std::cout << "FPS: " << frames << ", UPS: " << updates << std::endl;
+			//std::cout << "FPS: " << frames << ", UPS: " << updates << std::endl;
+
+			window.setTitle(title + " || FPS: " + std::to_string(frames) + ", UPS: " + std::to_string(updates));
+
+
+			tree.insert(words[counter++ % words.size()]);
+			//tree.insert(words[counter++]);
+
 			statClock = 0;
 			frames = 0;
 			updates = 0;
@@ -103,7 +112,9 @@ int main(int argc, char* argv[]) {
 
 	}
 
+	tree.inorder();
 	tree.preorder();
+	tree.postorder();
 
 	return 0;
 }

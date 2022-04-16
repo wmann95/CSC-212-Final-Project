@@ -15,7 +15,7 @@ class Renderer;
 class RBTNode {
 private:
 	RBTNode(Renderer* renderer);
-	RBTNode(Renderer* renderer, std::string word);
+	RBTNode(Renderer* renderer, std::string word, bool color);
 	int counter;
 	RBTNode* left;
 	RBTNode* right;
@@ -45,7 +45,7 @@ private:
 
 	RBTNode* root;
 
-	RBTNode* insert(std::string word, RBTNode* root, float x, float y);
+	RBTNode* insert(std::string word, RBTNode* root);
 	int height(RBTNode* root);
 
 	void preorder(RBTNode* root, std::ostream& os);
@@ -64,7 +64,7 @@ private:
 
 	float xStart = 400.0f;
 	float yStart = 25.0f;
-	float xOffset = 100.0f;
+	float xOffset = 50.0f;
 	float yOffset = 30.0f;
 
 public:
