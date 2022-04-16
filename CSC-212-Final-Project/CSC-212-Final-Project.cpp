@@ -9,65 +9,116 @@
 #include <cctype>
 #include <algorithm>
 
-void ReadFile(std::string file_name, RBTree* tree);
-std::vector<std::string> split(std::string line, std::string delimiters);
+std::vector<std::string> ReadFile(std::string file_name);
 
 int main(int argc, char* argv[]) {
+
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Left-Leaning Red-Black Trees");
 	Renderer renderer(&window);
 	RBTree tree(&renderer);
 
-	ReadFile(argv[1], &tree);
-	/*tree.insert("a");
-	tree.insert("b");
-	tree.insert("c");
-	tree.insert("d");
-	tree.insert("e");
-	tree.inorder();*/
-	//std::cout << tree.height() << std::endl;
+	// get the wordlist
+	std::vector<std::string> words = ReadFile(argv[1]);
+	int counter = 0;
 
-	tree.inorder();
-}
+	// How many frames per second and updates per second that should be done.
+	int fps = 60;
+	int ups = 30;
 
-std::vector<std::string> split(std::string line, std::string delimiters) {
+	// How many frames/updates have happened since last frame/update
+	int updates = 0;
+	int frames = 0;
 
-	std::stringstream stream(line);
-	std::string buffer;
+	// timers that have deltaTime added to them
+	int fpsTimer = 0;
+	int upsTimer = 0;
+	int statClock = 0;
 
-	std::vector<std::string> words;
 
-	while (stream >> buffer) {
+	sf::Clock clock;
+	sf::Vector2f target;
 
-		//std::string b = buffer;
+	long int deltaTime = 0;
+	long long int millis = clock.getElapsedTime().asMilliseconds();
 
-		std::transform(buffer.begin(), buffer.end(), buffer.begin(), [delimiters](char c) {
-			// check if the character is a delimiter, if it is, return null character, otherwise return the character.
-			if (c == '!' || c == ',' || c == ' ' || c == '\n' || c == '\t' || c == '?' || c == '\v' || c == '.' || c == '\r') {
-				return '\0';
+	// Run loop
+	while (window.isOpen()) {
+		sf::Event event;
+
+		// While there are events in the event queue.
+		while (window.pollEvent(event)) {
+			if (event.type == sf::Event::Closed) {
+				window.close();
 			}
-			return c;
-		});
-
-
-		if (buffer == "") {
-			continue;
+			if (event.type == sf::Event::MouseButtonPressed) {
+				target = (sf::Vector2f)sf::Mouse::getPosition(window);
+				//tree.debugSetTarget(target);
+			}
+			if (event.type == sf::Event::KeyPressed) {
+				if (event.key.code == sf::Keyboard::Space && counter < words.size()) {
+					tree.insert(words[counter++]);
+				}
+			}
 		}
 
+		// find the time since the last loop, if applicable, then reset timer to this loop time.
+		deltaTime = clock.getElapsedTime().asMilliseconds() - millis;
+		millis = clock.getElapsedTime().asMilliseconds();
 
-		words.push_back(buffer);
+		fpsTimer += deltaTime;
+		upsTimer += deltaTime;
+		statClock += deltaTime;
+
+		if (fpsTimer >= 1000 / fps) {
+			// Clear the window
+			window.clear(sf::Color(171.0f, 204.0f, 214.0f, 255.0f));
+
+			// Draw stuff here
+			tree.Draw(&window);
+
+			renderer.Render();
+
+			// Show drawn stuff
+			window.display();
+
+
+			// Reset frame timer and add a frame to count.
+			fpsTimer = 0;
+			frames++;
+		}
+
+		if (upsTimer >= 1000 / ups) {
+			// Do things that need updating (Animation movements)
+			tree.Update(deltaTime);
+		}
+
+		// Shows current frames per second and updates per second.
+		if (statClock >= 1000) {
+			std::cout << "FPS: " << frames << ", UPS: " << updates << std::endl;
+			statClock = 0;
+			frames = 0;
+			updates = 0;
+
+		}
+
 	}
-	
-	return words;
+
+	tree.preorder();
+
+	return 0;
 }
 
-void ReadFile(std::string file_name, RBTree* tree) {
+std::vector<std::string> ReadFile(std::string file_name) {
 	// Create the input filestream - opens the file & prepares it for reading
 	std::ifstream file(file_name);
+
+	// place to store the words of the text
+	std::vector<std::string> buffer;
 
 	// Temporary string to hold a single line of the file
 	std::string str;
 
-	std::string const delimiters = " ,'\"-?!%&*^()@_;:./\\";
+	std::string const delimiters = " ,'\"-?!%&*^()[]@_;:./\\";
 
 	// Reads all lines in the file, 1 at at time
 	while (std::getline(file, str)) {
@@ -102,7 +153,7 @@ void ReadFile(std::string file_name, RBTree* tree) {
 			// returns (to the transform method, and thereby that specific character) a lowercase character.
 			std::transform(word.begin(), word.end(), word.begin(), [](unsigned char c) { return std::tolower(c); });
 
-			tree->insert(word);
+			buffer.push_back(word);
 		}
 
 		/* // Converts our string into a stringstream
@@ -119,6 +170,10 @@ void ReadFile(std::string file_name, RBTree* tree) {
 		  }
 	  }*/
 	}
+
+	file.close();
+
+	return buffer;
 }
 
 /*

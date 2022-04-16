@@ -5,6 +5,7 @@
 #include <functional>
 #include <ostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Vector2.hpp>
 #include "Renderer.h"
 #include "TransformHelper.h"
@@ -23,6 +24,7 @@ private:
 	sf::Vector2f position;
 	sf::Vector2f target;
 	bool red;
+	sf::Text text;
 
 
 	void update(long long int);
@@ -50,6 +52,8 @@ private:
 	void inorder(RBTNode* root, std::ostream& os);
 	void postorder(RBTNode* root, std::ostream& os);
 
+	void updateTargets(RBTNode* root, int xPos, int yPos);
+
 	void destroy(RBTNode* root);
 	bool search(std::string word, RBTNode* root);
 
@@ -58,6 +62,10 @@ private:
 
 	bool isRed(RBTNode* node);
 
+	float xStart = 400.0f;
+	float yStart = 25.0f;
+	float xOffset = 100.0f;
+	float yOffset = 30.0f;
 
 public:
 	RBTree(Renderer* renderer);

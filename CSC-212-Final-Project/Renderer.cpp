@@ -4,6 +4,13 @@
 
 Renderer::Renderer(sf::RenderWindow* window){
 	this->window = window;
+	if (!font.loadFromFile("Arial.ttf")) {
+
+		std::cout << "ERROR LOADING FONT" << std::endl;
+	}
+	std::cout << "Font loaded..." << std::endl;
+
+
 }
 
 Renderer::~Renderer() {

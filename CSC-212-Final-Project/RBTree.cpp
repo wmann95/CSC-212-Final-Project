@@ -8,6 +8,22 @@ RBTNode::RBTNode(Renderer* renderer) {
 	red = false;
 	shape = sf::CircleShape(shapeSize);
 	renderer->RegisterNode(this);
+
+	// select the font
+	text.setFont(*(renderer->getFont())); // font is a sf::Font
+
+	// set the string to display
+	text.setString("EMPTY WTF???");
+
+	// set the character size
+	text.setCharacterSize(24); // in pixels, not points!
+
+	// set the color
+	text.setFillColor(sf::Color::White);
+	text.setOutlineColor(sf::Color::Black);
+
+	// set the text style
+	text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 }
 
 RBTNode::RBTNode(Renderer* renderer, std::string word) {
@@ -18,6 +34,22 @@ RBTNode::RBTNode(Renderer* renderer, std::string word) {
 	red = false;
 	shape = sf::CircleShape(shapeSize);
 	renderer->RegisterNode(this);
+
+	// select the font
+	text.setFont(*(renderer->getFont())); // font is a sf::Font
+
+	// set the string to display
+	text.setString(word);
+
+	// set the character size
+	text.setCharacterSize(24); // in pixels, not points!
+
+	// set the color
+	text.setFillColor(sf::Color::White);
+	text.setOutlineColor(sf::Color::Black);
+
+	// set the text style
+	text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 }
 
 RBTNode::~RBTNode() {}
@@ -31,6 +63,7 @@ int RBTree::value(std::string word) {
 	return sum;
 }
 
+// returns true if word1 comes before word2. 
 bool areWordsInOrder(std::string word1, std::string word2) {
 	return word1 < word2;
 }
@@ -41,22 +74,22 @@ RBTNode* RBTree::insert(std::string word, RBTNode* root, float x = 400.0f, float
 		RBTNode* node = new RBTNode(renderer, word);
 		node->red = true;
 		nodes.push_back(node);
-		node->target = sf::Vector2f(x, y);
 		//std::cout << node->word << " : " << x << ", " << y << std::endl;
 
 		return node;
 	}
 
+	// Are the words the same? increment counter and return root.
 	if (word == root->word) {
 		root->counter++;
 		//ADD MORE
 		return root;
 	}
 
-
+	// Does the word being inserted come before the root word? if so, insert to the left.
 	if(areWordsInOrder(word, root->word)){
-		root->left = insert(word, root->left, x - 50.0f, y + 30.0f);
-		root->left->red = true;
+		root->left = insert(word, root->left, x - xOffset, y + yOffset);
+		//root->left->red = true;
 
 		//nodes.push_back(root->left);
 
@@ -64,8 +97,8 @@ RBTNode* RBTree::insert(std::string word, RBTNode* root, float x = 400.0f, float
 		//std::cout << "l" << std::endl;
 	}
 	else {
-		root->right = insert(word, root->right, x + 50.0f, y + 30.0f);
-		root->right->red = true;
+		root->right = insert(word, root->right, x + xOffset, y + yOffset);
+		//root->right->red = true;
 		//nodes.push_back(root->right);
 		//std::cout << "r" << std::endl;
 	}
@@ -125,6 +158,18 @@ void RBTree::inorder(RBTNode* root, std::ostream& os) {
 	return;
 }
 
+void RBTree::updateTargets(RBTNode* root, int xPos = 0, int yPos = 0) {
+	if (!root) {
+		return;
+	}
+
+
+	this->updateTargets(root->left, --xPos, ++yPos);
+	root->target = sf::Vector2f(xStart + xPos * xOffset, yPos * yOffset + yStart);
+	this->updateTargets(root->right, ++xPos, ++yPos);
+
+}
+
 void RBTree::postorder(RBTNode* root, std::ostream& os) {
 	if (!root) {
 		return;
@@ -166,27 +211,12 @@ bool RBTree::search(std::string word, RBTNode* root) {
 }
 
 RBTNode* RBTree::rotateLeft(RBTNode* root) {
+	
 	RBTNode* p = root->right;
-
-	if (root->right->left) {
-		root->right->target = root->right->left->position;
-	}
-	else {
-		root->right->target = root->right->position + sf::Vector2f(-50.0f, 0.0f);
-	}
-
-	root->right = root->right->left;
-
-	if (p->left) {
-		p->left->target = root->position;
-	}
-
+	root->right = p->left;
 	p->left = root;
-
-	p->red = p->left->red;
-	p->left->red = true;
-
-	root->target = root->position + sf::Vector2f(-50.0f, -30.0f);
+	p->red = root->red;
+	root->red = true;
 
 	return p;
 }
@@ -229,8 +259,10 @@ void RBTNode::draw(sf::RenderWindow* window) {
 	}
 
 	shape.setPosition(position);
+	text.setPosition(position);
 
 	window->draw(shape);
+	window->draw(text);
 }
 
 RBTree::RBTree(Renderer* renderer) {
@@ -276,6 +308,7 @@ void RBTree::clear() {
 }
 
 void RBTree::Update(long long int millis) {
+	updateTargets(root);
 	for (RBTNode* node : nodes) {
 		node->update(millis);
 	}
