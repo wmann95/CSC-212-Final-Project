@@ -6,6 +6,7 @@
 #include <ostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/Vertex.hpp>
 #include <SFML/System/Vector2.hpp>
 #include "Renderer.h"
 #include "TransformHelper.h"
@@ -14,11 +15,12 @@ class Renderer;
 
 class RBTNode {
 private:
-	RBTNode(Renderer* renderer);
-	RBTNode(Renderer* renderer, std::string word, bool color);
+	RBTNode(Renderer* renderer, RBTNode* p);
+	RBTNode(Renderer* renderer, RBTNode* p, std::string word, bool color);
 	int counter;
 	RBTNode* left;
 	RBTNode* right;
+	RBTNode* parent;
 	sf::CircleShape shape;
 	float shapeSize = 25.0f;
 	sf::Vector2f position;
@@ -26,6 +28,7 @@ private:
 	bool red;
 	sf::Text text;
 
+	int xPos = 0, yPos = 0;
 
 	void update(long long int);
 
@@ -45,14 +48,14 @@ private:
 
 	RBTNode* root;
 
-	RBTNode* insert(std::string word, RBTNode* root);
+	RBTNode* insert(std::string word, RBTNode* root, RBTNode* prev);
 	int height(RBTNode* root);
 
 	void preorder(RBTNode* root, std::ostream& os);
 	void inorder(RBTNode* root, std::ostream& os);
 	void postorder(RBTNode* root, std::ostream& os);
 
-	void updateTargets(RBTNode* root, int xPos, int yPos);
+	void updateTargets(RBTNode* root, RBTNode* prev, bool wentLeft);
 
 	void destroy(RBTNode* root);
 	bool search(std::string word, RBTNode* root);
@@ -65,7 +68,8 @@ private:
 	float xStart = 400.0f;
 	float yStart = 25.0f;
 	float xOffset = 50.0f;
-	float yOffset = 30.0f;
+	float yOffset = 60.0f;
+
 
 public:
 	RBTree(Renderer* renderer);
@@ -84,6 +88,8 @@ public:
 	void clear();
 
 	void Update(long long int millis);
+	void UpdateNodeTargets();
+
 	void Draw(sf::RenderWindow*);
 
 	RBTNode* top() {

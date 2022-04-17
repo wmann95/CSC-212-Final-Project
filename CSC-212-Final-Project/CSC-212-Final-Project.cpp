@@ -41,6 +41,8 @@ int main(int argc, char* argv[]) {
 	long int deltaTime = 0;
 	long long int millis = clock.getElapsedTime().asMilliseconds();
 
+	std::string testWord = "supercalifragalisticexpialidocious";
+
 	// Run loop
 	while (window.isOpen()) {
 		sf::Event event;
@@ -56,9 +58,11 @@ int main(int argc, char* argv[]) {
 			}
 			if (event.type == sf::Event::KeyPressed) {
 				if (event.key.code == sf::Keyboard::Space && counter < words.size()) {
-					//std::string st = "";
+					std::string st = "";
 					//st.push_back(testWord[(counter++) % testWord.size()]);
-					
+					//tree.insert(st);
+
+					tree.insert(words[counter++ % words.size()]);
 				}
 			}
 		}
@@ -92,6 +96,7 @@ int main(int argc, char* argv[]) {
 		if (upsTimer >= 1000 / ups) {
 			// Do things that need updating (Animation movements)
 			tree.Update(deltaTime);
+			tree.UpdateNodeTargets();
 		}
 
 		// Shows current frames per second and updates per second.
@@ -99,10 +104,8 @@ int main(int argc, char* argv[]) {
 			//std::cout << "FPS: " << frames << ", UPS: " << updates << std::endl;
 
 			window.setTitle(title + " || FPS: " + std::to_string(frames) + ", UPS: " + std::to_string(updates));
-
-
 			tree.insert(words[counter++ % words.size()]);
-			//tree.insert(words[counter++]);
+
 
 			statClock = 0;
 			frames = 0;
