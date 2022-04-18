@@ -8,6 +8,7 @@
 #include <fstream>
 #include <cctype>
 #include <algorithm>
+#include <SFML/Window/Keyboard.hpp>
 
 std::vector<std::string> ReadFile(std::string file_name);
 
@@ -15,7 +16,12 @@ int main(int argc, char* argv[]) {
 
 	std::string title = "Left-Leaning Red-Black Trees";
 
-	sf::RenderWindow window(sf::VideoMode(800, 600),title);
+	int xSize = 800, ySize = 600;
+
+	sf::RenderWindow window(sf::VideoMode(xSize, ySize),title);
+	sf::View view;
+	view.reset(sf::FloatRect(-400.0f, -25.0f, 800.0f, 600.0f));
+
 	Renderer renderer(&window);
 	RBTree tree(&renderer);
 
@@ -35,6 +41,7 @@ int main(int argc, char* argv[]) {
 	int fpsTimer = 0;
 	int upsTimer = 0;
 	int statClock = 0;
+	int textClock = 0;
 	sf::Clock clock;
 	sf::Vector2f target;
 
@@ -43,8 +50,18 @@ int main(int argc, char* argv[]) {
 
 	std::string testWord = "supercalifragalisticexpialidocious";
 
+
+	sf::Vector2f scroll(3.0f, 3.0f);
+	sf::Vector2f scrollTarget(1.0f, 1.0f);
+
+	tree.insert(words[counter++ % words.size()]);
+	view.setSize(xSize * scroll.x, ySize * scroll.y);
+
+	bool pauseFlag = false;
+
 	// Run loop
 	while (window.isOpen()) {
+		float camSpeed = 500.0f;
 		sf::Event event;
 
 		// While there are events in the event queue.
@@ -52,19 +69,17 @@ int main(int argc, char* argv[]) {
 			if (event.type == sf::Event::Closed) {
 				window.close();
 			}
-			if (event.type == sf::Event::MouseButtonPressed) {
-				target = (sf::Vector2f)sf::Mouse::getPosition(window);
-				//tree.debugSetTarget(target);
+			if (event.type == sf::Event::MouseWheelMoved) {
+				std::cout << event.mouseWheel.delta << std::endl;
+				scrollTarget.x *= pow(2, event.mouseWheel.delta);
+				scrollTarget.y *= pow(2, event.mouseWheel.delta);
 			}
 			if (event.type == sf::Event::KeyPressed) {
-				if (event.key.code == sf::Keyboard::Space && counter < words.size()) {
-					std::string st = "";
-					//st.push_back(testWord[(counter++) % testWord.size()]);
-					//tree.insert(st);
-
-					tree.insert(words[counter++ % words.size()]);
+				if (event.key.code == sf::Keyboard::Space) {
+					pauseFlag = !pauseFlag;
 				}
 			}
+			
 		}
 
 		// find the time since the last loop, if applicable, then reset timer to this loop time.
@@ -74,15 +89,44 @@ int main(int argc, char* argv[]) {
 		fpsTimer += deltaTime;
 		upsTimer += deltaTime;
 		statClock += deltaTime;
+		textClock += deltaTime;
+
+		if (upsTimer >= 1000 / ups) {
+			// Do things that need updating (Animation movements)
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+				view.move(0, -camSpeed * deltaTime / 1000.0f);
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+				view.move(0, camSpeed * deltaTime / 1000.0f);
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+				view.move(-camSpeed * deltaTime / 1000.0f, 0);
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+				view.move(camSpeed * deltaTime / 1000.0f, 0);
+			}
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+
+			}
+
+			tree.Update(deltaTime);
+			scroll = lerp(scroll, scrollTarget, 0.8f * deltaTime);
+			camSpeed *= scroll.x;
+			view.setSize(xSize * scroll.x, ySize * scroll.y);
+		}
 
 		if (fpsTimer >= 1000 / fps) {
 			// Clear the window
 			window.clear(sf::Color(171.0f, 204.0f, 214.0f, 255.0f));
 
 			// Draw stuff here
-			tree.Draw(&window);
+
+			window.setView(view);
 
 			renderer.Render();
+
+			window.setView(window.getDefaultView());
 
 			// Show drawn stuff
 			window.display();
@@ -93,10 +137,9 @@ int main(int argc, char* argv[]) {
 			frames++;
 		}
 
-		if (upsTimer >= 1000 / ups) {
-			// Do things that need updating (Animation movements)
-			tree.Update(deltaTime);
-			tree.UpdateNodeTargets();
+		if (textClock >= 200) {
+			if(!pauseFlag) tree.insert(words[counter++ % words.size()]);
+			textClock = 0;
 		}
 
 		// Shows current frames per second and updates per second.
@@ -104,7 +147,6 @@ int main(int argc, char* argv[]) {
 			//std::cout << "FPS: " << frames << ", UPS: " << updates << std::endl;
 
 			window.setTitle(title + " || FPS: " + std::to_string(frames) + ", UPS: " + std::to_string(updates));
-			tree.insert(words[counter++ % words.size()]);
 
 
 			statClock = 0;

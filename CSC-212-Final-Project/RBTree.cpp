@@ -157,63 +157,44 @@ void RBTree::inorder(RBTNode* root, std::ostream& os) {
 	return;
 }
 
-void RBTree::updateTargets(RBTNode* root, RBTNode* prev, bool wentLeft = true) {
+void RBTree::updateTargets(RBTNode* root, RBTNode* prev, int baseWidth) {
 	
 	if (!root) {
 		return;
 	}
 
-
-	this->updateTargets(root->left, root, true);
-
-	float xOff = xStart;
-	float yOff = yStart;
-
-	root->xPos = 0;
-	root->yPos = 0;
-
 	if (!prev) {
+		root->target = sf::Vector2f(xStart, yStart);
 		root->parent = nullptr;
-
-
-	}else{
+	}
+	else {
 		root->parent = prev;
-		
-		root->xPos = prev->xPos;
-		root->yPos = prev->yPos;
-
-		if (root->xPos == 0 && wentLeft) {
-			root->xPos -= 1;
-		}
-		else if(root->xPos == 0 && !wentLeft) {
-			root->xPos += 1;
-		}
-		else {
-			if (root->xPos >= 0) {
-				root->xPos += wentLeft ? 0 : root->yPos;
-				root->yPos += wentLeft ? 1 : 0;
-			}
-			else {
-				root->xPos += wentLeft ? -(root->yPos) : 0;
-				root->yPos += wentLeft ? 0 : 1;
-			}
-		}
-
-		root->yPos += 1;
-
-		//xOff = prev->target.x + ((pow(2, height()+1)) * xOffset * (wentLeft ? -1 : 1)) / (root->yPos + 2);
-		xOff += root->xPos * xOffset * sqrt(root->yPos);
-		yOff += yOffset * root->yPos;
-
 	}
 
+	float xOff = (float)(baseWidth) / 2;
 
-	//if(yPos > 1) xOff += pow(2, height() -1) * (xPos >= 0 ? 1 : -1) * xOffset;
+	if (root->left) {
+		root->left->target = root->target + sf::Vector2f(-xOff * xOffset, yOffset * log2f(baseWidth + 1));
+	}
 
-	root->target = sf::Vector2f(xOff, yOff);
+	if (root->right) {
+		root->right->target = root->target + sf::Vector2f(xOff * xOffset, yOffset * log2f(baseWidth + 1));
+	}
 
-	this->updateTargets(root->right, root, false);
-	
+	updateTargets(root->left, root, xOff);
+	updateTargets(root->right, root, xOff);
+
+}
+
+void RBTree::Update(long long int millis) {
+	for (RBTNode* node : nodes) {
+		node->update(millis);
+	}
+	UpdateNodeTargets();
+}
+
+void RBTree::UpdateNodeTargets() {
+	updateTargets(root, nullptr, pow(2, height() - 1));
 }
 
 void RBTree::postorder(RBTNode* root, std::ostream& os) {
@@ -300,6 +281,7 @@ void RBTNode::update(long long int millis) {
 void RBTNode::draw(sf::RenderWindow* window) {
 
 
+
 	shape.setPosition(position - sf::Vector2f(shapeSize, shapeSize));
 	text.setPosition(position);
 
@@ -372,17 +354,3 @@ void RBTree::clear() {
 	this->root = nullptr;
 }
 
-void RBTree::Update(long long int millis) {
-	//UpdateNodeTargets();
-	for (RBTNode* node : nodes) {
-		node->update(millis);
-	}
-}
-
-void RBTree::UpdateNodeTargets() {
-	updateTargets(root, nullptr);
-}
-
-void RBTree::Draw(sf::RenderWindow* window) {
-
-}

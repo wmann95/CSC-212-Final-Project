@@ -17,6 +17,7 @@ class RBTNode {
 private:
 	RBTNode(Renderer* renderer, RBTNode* p);
 	RBTNode(Renderer* renderer, RBTNode* p, std::string word, bool color);
+	Renderer* renderer;
 	int counter;
 	RBTNode* left;
 	RBTNode* right;
@@ -39,6 +40,7 @@ public:
 	void draw(sf::RenderWindow*);
 
 	friend class RBTree;
+	friend class Renderer;
 };
 
 class RBTree {
@@ -55,7 +57,7 @@ private:
 	void inorder(RBTNode* root, std::ostream& os);
 	void postorder(RBTNode* root, std::ostream& os);
 
-	void updateTargets(RBTNode* root, RBTNode* prev, bool wentLeft);
+	void updateTargets(RBTNode* root, RBTNode* prev, int baseWidth);
 
 	void destroy(RBTNode* root);
 	bool search(std::string word, RBTNode* root);
@@ -65,9 +67,9 @@ private:
 
 	bool isRed(RBTNode* node);
 
-	float xStart = 400.0f;
-	float yStart = 25.0f;
-	float xOffset = 50.0f;
+	float xStart = 0.0f;
+	float yStart = 0.0f;
+	float xOffset = 60.0f;
 	float yOffset = 60.0f;
 
 
@@ -89,8 +91,6 @@ public:
 
 	void Update(long long int millis);
 	void UpdateNodeTargets();
-
-	void Draw(sf::RenderWindow*);
 
 	RBTNode* top() {
 		return root;

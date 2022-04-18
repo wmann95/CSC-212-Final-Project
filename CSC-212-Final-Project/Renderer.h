@@ -14,6 +14,7 @@ private:
 	bool closeFlag = false;
 	std::vector<RBTNode*> nodes;
 	sf::Font font;
+	sf::Vector2f camPos;
 
 public:
 	Renderer(sf::RenderWindow* window);
@@ -25,6 +26,9 @@ public:
 
 	void Render();
 	void RegisterNode(RBTNode* node);
+
+	sf::Vector2f getCameraPos();
+	void moveCam(float x, float y);
 	
 	sf::Font* getFont() {
 		return &font;
