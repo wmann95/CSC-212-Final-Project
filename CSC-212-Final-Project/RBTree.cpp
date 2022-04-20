@@ -1,96 +1,105 @@
 #include "RBTree.h"
 
-#include <string>
-#include <iostream> 
-#include <functional>
-#include <ostream>
-
-
-RBTNode::RBTNode() {
+RBTNode::RBTNode(Renderer* renderer, RBTNode* p) {
 	this->counter = 0;
 	this->left = nullptr;
 	this->right = nullptr;
 	red = true;
+	shape = sf::CircleShape(shapeSize);
+
+	renderer->RegisterNode(this);
+	parent = p;
+
+	// select the font
+	text.setFont(*(renderer->getFont())); // font is a sf::Font
+
+	// set the string to display
+	text.setString("EMPTY WTF???");
+
+	// set the character size
+	text.setCharacterSize(24); // in pixels, not points!
+
+	// set the color
+	text.setFillColor(sf::Color::White);
+	text.setOutlineColor(sf::Color::Black);
+
+	// set the text style
+	text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 }
 
-RBTNode::RBTNode(std::string word) {
+RBTNode::RBTNode(Renderer* renderer, RBTNode* p, std::string word, bool color) {
 	this->word = word;
 	this->counter = 1;
 	this->left = nullptr;
 	this->right = nullptr;
-	red = true;
+	red = color;
+	shape = sf::CircleShape(shapeSize);
+	renderer->RegisterNode(this);
+	parent = p;
+	// select the font
+	text.setFont(*(renderer->getFont())); // font is a sf::Font
+
+	// set the string to display
+	text.setString(word);
+
+	// set the character size
+	text.setCharacterSize(24); // in pixels, not points!
+
+	// set the color
+	text.setFillColor(sf::Color::White);
+	text.setOutlineColor(sf::Color::Black);
+
+	// set the text style
+	text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 }
 
-RBTNode::~RBTNode() {
+RBTNode::~RBTNode() {}
 
-}
-
-int RBTree::value(std::string word){
+int RBTree::value(std::string word) {
 	int sum = 0;
-	for (int i = 1; i <= word.size(); i++){
-		char x = std::tolower(word[i - 1]);
-		sum += int(x) * i;
+	for (unsigned int i = 0; i < word.size(); i++) {
+		char x = tolower(word[i]);
+		sum += int(x);
 	}
 	return sum;
 }
 
-int RBTree::recalculate_value(std::string word){
-	int sum = 0;
-	for (int i = 1; i <= word.size(); i++){
-		char x = std::tolower(word[word.size() - i]);
-		sum += int(x) * i;
-	}
-	return sum;
+// returns true if word1 comes before word2. 
+bool areWordsInOrder(std::string word1, std::string word2) {;
+	return word1 < word2;
 }
 
-RBTNode* RBTree::insert(std::string word, RBTNode* root) {
+RBTNode* RBTree::insert(std::string word, RBTNode* root, RBTNode* prev) {
+
 	if (!root) {
-		return new RBTNode(word);
+		RBTNode* node = new RBTNode(renderer, prev, word, true);
+		nodes.push_back(node);
+
+		return node;
 	}
-	int word_val = value(word);
-	int root_val = value(root->word);
-	if (word_val == root_val){
-		if (word == root->word){
-			root->counter++;
-		}else{
-			std::cout << "duplicate" << std::endl;
-		}
+
+	if (word == root->word) {
+		root->counter++;
 	}
-	if (word_val < root_val) {
-		root->left = insert(word, root->left);
-		root->left->red = true;
+	else if (areWordsInOrder(word, root->word)) {
+		root->left = insert(word, root->left, root);
 	}
-	else if (word_val > root_val){
-		root->right = insert(word, root->right);
-		root->right->red = true;
+	else {
+		root->right = insert(word, root->right, root);
 	}
-	bool good = false;
-	while (!good){
-		bool change = false;
 
 	if (isRed(root->right) && !isRed(root->left)) {
 		root = rotateLeft(root);
-		std::cout << "Left" << std::endl;
-		change = true;
 	}
 
 	if (isRed(root->left) && isRed(root->left->left)) {
 		root = rotateRight(root);
-		std::cout << "Right" << std::endl;
-		change = true;
 	}
-	
+
 	if (isRed(root->left) && isRed(root->right)) {
 		root->red = true;
 		root->left->red = false;
 		root->right->red = false;
-		change = true;
-		std::cout << "Swap" << std::endl;
-	}
-
-	if (!change){
-		good = true;
-	}
 	}
 
 	return root;
@@ -102,7 +111,7 @@ int RBTree::height(RBTNode* root) {
 	}
 	int left = height(root->left);
 	int right = height(root->right);
-	
+  
 	return (left > right ? left + 1 : right + 1);
 }
 
@@ -130,6 +139,48 @@ void RBTree::inorder(RBTNode* root, std::ostream& os) {
 	return;
 }
 
+void RBTree::updateTargets(RBTNode* root, RBTNode* prev, int baseWidth) {
+	
+	if (!root) {
+		return;
+	}
+
+	if (!prev) {
+		// ensure that the root is at the start and has no parent. The parent is for the line rendering.
+		root->target = sf::Vector2f(xStart, yStart);
+		root->parent = nullptr;
+	}
+	else {
+		root->parent = prev;
+	}
+
+	float xOff = (float)(baseWidth) / 2;
+	float yOff = yOffset * log2f(baseWidth + 1);
+
+	if (root->left) {
+		root->left->target = root->target + sf::Vector2f(-xOff * xOffset, yOff);
+	}
+
+	if (root->right) {
+		root->right->target = root->target + sf::Vector2f(xOff * xOffset, yOff);
+	}
+
+	updateTargets(root->left, root, xOff);
+	updateTargets(root->right, root, xOff);
+
+}
+
+void RBTree::Update(long long int millis) {
+	for (RBTNode* node : nodes) {
+		node->update(millis);
+	}
+	UpdateNodeTargets();
+}
+
+void RBTree::UpdateNodeTargets() {
+	updateTargets(root, nullptr, pow(2, height() - 1));
+}
+
 void RBTree::postorder(RBTNode* root, std::ostream& os) {
 	if (!root) {
 		return;
@@ -142,6 +193,27 @@ void RBTree::postorder(RBTNode* root, std::ostream& os) {
 	return;
 }
 
+int RBTree::count(RBTNode* root, std::string key) {
+	if (!root) {
+		return 0;
+	}
+
+	if (key == root->word){
+		return root->counter;
+	}
+
+	if (areWordsInOrder(key, root->word)) {
+		return count(root->left, key);
+	}
+	else {
+		return count(root->right, key);
+	}
+}
+
+int RBTree::count(std::string key) {
+	return count(root, key);
+}
+
 void RBTree::destroy(RBTNode* root) {
 	if (!root) {
 		return;
@@ -151,10 +223,6 @@ void RBTree::destroy(RBTNode* root) {
 	this->destroy(root->right);
 	delete root->left;
 	delete root->right;
-}
-
-RBTNode* RBTree::top(){
-	return root;
 }
 
 bool RBTree::search(std::string word, RBTNode* root) {
@@ -176,20 +244,23 @@ bool RBTree::search(std::string word, RBTNode* root) {
 
 RBTNode* RBTree::rotateLeft(RBTNode* root) {
 	RBTNode* p = root->right;
-	root->right = p->left;
+
+	root->right = root->right->left;
+
 	p->left = root;
 
-	p->red = root->red;
-	root->red = true;
+	p->red = p->left->red;
+	p->left->red = true;
+
 	return p;
 }
 
 RBTNode* RBTree::rotateRight(RBTNode* root) {
 	RBTNode* p = root->left;
-	root->left = p->right;
+	root->left = root->left->right;
 	p->right = root;
 
-	p->red = root->red;
+	p->red = p->right->red;
 	p->right->red = true;
 	return p;
 }
@@ -202,12 +273,52 @@ bool RBTree::isRed(RBTNode* node) {
 	return node->red;
 }
 
+void RBTNode::update(long long int millis) {
+	float factor = 1/((millis) + 10.0f);
+	position = lerp(position, target, factor);
+}
+
 /*
  * Public Functions
 */
 
-RBTree::RBTree() {
+void RBTNode::draw(sf::RenderWindow* window) {
+
+
+
+	shape.setPosition(position - sf::Vector2f(shapeSize, shapeSize));
+	text.setPosition(position);
+
+	if (parent) {
+
+		//std::cout << parent << std::endl;
+
+		sf::Vertex line[] = {
+			sf::Vertex(position),
+			sf::Vertex(parent->position)
+		};
+
+		line[0].color = sf::Color(0, 0, 0, 255);
+		line[1].color = sf::Color(0, 0, 0, 255);
+
+		window->draw(line, 2, sf::Lines);
+	}
+
+	if (this->red) {
+		shape.setFillColor(sf::Color::Red);
+	}
+	else {
+		shape.setFillColor(sf::Color::Black);
+	}
+
+
+	window->draw(shape);
+	window->draw(text);
+}
+
+RBTree::RBTree(Renderer* renderer) {
 	this->root = nullptr;
+	this->renderer = renderer;
 }
 
 RBTree::~RBTree() {
@@ -215,7 +326,7 @@ RBTree::~RBTree() {
 }
 
 void RBTree::insert(std::string word) {
-	this->root = this->insert(word, this->root);
+	this->root = this->insert(word, this->root, nullptr);
 	this->root->red = false;
 }
 
