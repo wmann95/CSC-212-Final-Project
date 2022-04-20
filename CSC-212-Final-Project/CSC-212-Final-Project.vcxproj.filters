@@ -18,7 +18,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CSC-212-Final-Project.cpp">
+    <ClCompile Include="RBTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RBTree.cpp">
@@ -28,6 +28,7 @@
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="TransformHelper.cpp">
+    <ClCompile Include="test_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

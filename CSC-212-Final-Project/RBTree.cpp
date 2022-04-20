@@ -1,6 +1,5 @@
 #include "RBTree.h"
 
-
 RBTNode::RBTNode(Renderer* renderer, RBTNode* p) {
 	this->counter = 0;
 	this->left = nullptr;
@@ -91,7 +90,6 @@ RBTNode* RBTree::insert(std::string word, RBTNode* root, RBTNode* prev) {
 
 	if (isRed(root->right) && !isRed(root->left)) {
 		root = rotateLeft(root);
-
 	}
 
 	if (isRed(root->left) && isRed(root->left->left)) {
@@ -107,14 +105,13 @@ RBTNode* RBTree::insert(std::string word, RBTNode* root, RBTNode* prev) {
 	return root;
 }
 
-
 int RBTree::height(RBTNode* root) {
 	if (!root) {
 		return -1;
 	}
 	int left = height(root->left);
 	int right = height(root->right);
-
+  
 	return (left > right ? left + 1 : right + 1);
 }
 
@@ -285,7 +282,6 @@ void RBTNode::update(long long int millis) {
  * Public Functions
 */
 
-
 void RBTNode::draw(sf::RenderWindow* window) {
 
 
@@ -361,4 +357,3 @@ void RBTree::clear() {
 	this->destroy(this->root);
 	this->root = nullptr;
 }
-

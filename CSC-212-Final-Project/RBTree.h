@@ -80,7 +80,6 @@ public:
 	~RBTree();
 
 	int value(std::string word);
-
 	void insert(std::string word);
 	int height();
 
