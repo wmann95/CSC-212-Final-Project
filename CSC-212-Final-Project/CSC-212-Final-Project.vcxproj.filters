@@ -15,8 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CSC-212-Final-Project.cpp">
+    <ClCompile Include="RBTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="test_main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RBTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
