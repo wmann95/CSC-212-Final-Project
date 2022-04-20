@@ -54,10 +54,17 @@ int main(int argc, char* argv[]) {
 	sf::Vector2f scroll(3.0f, 3.0f);
 	sf::Vector2f scrollTarget(1.0f, 1.0f);
 
+	sf::Vector2f cam(0.0f , 100.0f);
+	sf::Vector2f camTarget(0, 250.0f);
+
 	tree.insert(words[counter++ % words.size()]);
 	view.setSize(xSize * scroll.x, ySize * scroll.y);
+	view.setCenter(cam);
 
 	bool pauseFlag = false;
+	bool scrollLock = false;
+	bool endAnimShouldPlay = false;
+	bool endAnimComplete = false;
 
 	// Run loop
 	while (window.isOpen()) {
@@ -69,15 +76,23 @@ int main(int argc, char* argv[]) {
 			if (event.type == sf::Event::Closed) {
 				window.close();
 			}
-			if (event.type == sf::Event::MouseWheelMoved) {
+			if (event.type == sf::Event::MouseWheelMoved && !scrollLock) {
 				std::cout << event.mouseWheel.delta << std::endl;
-				scrollTarget.x *= pow(2, event.mouseWheel.delta);
-				scrollTarget.y *= pow(2, event.mouseWheel.delta);
+				float factor = 1.5f;
+				scrollTarget.x *= pow(factor, event.mouseWheel.delta);
+				scrollTarget.y *= pow(factor, event.mouseWheel.delta);
 			}
 			if (event.type == sf::Event::KeyPressed) {
 				if (event.key.code == sf::Keyboard::Space) {
 					pauseFlag = !pauseFlag;
 				}
+			}
+			if (event.type == sf::Event::MouseButtonPressed && !scrollLock) {
+
+				sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+
+				camTarget += window.mapPixelToCoords(mousePos) - sf::Vector2f(view.getSize().x / 2, view.getSize().y / 2);
+
 			}
 			
 		}
@@ -86,6 +101,7 @@ int main(int argc, char* argv[]) {
 		deltaTime = clock.getElapsedTime().asMilliseconds() - millis;
 		millis = clock.getElapsedTime().asMilliseconds();
 
+		// increment timers and clocks by deltatime.
 		fpsTimer += deltaTime;
 		upsTimer += deltaTime;
 		statClock += deltaTime;
@@ -94,26 +110,39 @@ int main(int argc, char* argv[]) {
 		if (upsTimer >= 1000 / ups) {
 			// Do things that need updating (Animation movements)
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-				view.move(0, -camSpeed * deltaTime / 1000.0f);
+			if (!scrollLock) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+					camTarget.y += -camSpeed * deltaTime / 1000.0f;
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+					camTarget.y += camSpeed * deltaTime / 1000.0f;
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+					camTarget.x += -camSpeed * deltaTime / 1000.0f;
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+					camTarget.x += camSpeed * deltaTime / 1000.0f;
+				}
 			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-				view.move(0, camSpeed * deltaTime / 1000.0f);
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-				view.move(-camSpeed * deltaTime / 1000.0f, 0);
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-				view.move(camSpeed * deltaTime / 1000.0f, 0);
-			}
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-
-			}
-
 			tree.Update(deltaTime);
 			scroll = lerp(scroll, scrollTarget, 0.8f * deltaTime);
-			camSpeed *= scroll.x;
+			camSpeed = camSpeed / (scroll.x * scroll.x);
 			view.setSize(xSize * scroll.x, ySize * scroll.y);
+
+			cam = lerp(cam, camTarget, 0.95f);
+
+			if (endAnimShouldPlay && !endAnimComplete) {
+				float dist = sqrt(pow(camTarget.x - cam.x, 2) + pow(camTarget.y - cam.y, 2));
+				//std::cout << dist << std::endl;
+
+				if (dist < 0.0025f) {
+					endAnimComplete = true;
+					scrollLock = false;
+					std::cout << "Anim done." << std::endl;
+				}
+			}
+
+			view.setCenter(cam);
 		}
 
 		if (fpsTimer >= 1000 / fps) {
@@ -137,9 +166,29 @@ int main(int argc, char* argv[]) {
 			frames++;
 		}
 
-		if (textClock >= 200) {
+		// insert a word every 2/10's of a second.
+		if (textClock >= 200 && counter < words.size()) {
 			if(!pauseFlag) tree.insert(words[counter++ % words.size()]);
 			textClock = 0;
+		}
+		
+		// zoom out to show whole tree
+		if (counter >= words.size() && !endAnimShouldPlay) {
+			scrollLock = true;
+			endAnimShouldPlay = true;
+
+			int treeHeight = tree.height();
+			float width = (pow(2, treeHeight) * tree.getNodeOffset().x) / xSize;
+			float height = (float)treeHeight * tree.getNodeOffset().y;
+			
+			width *= 1.1f;
+
+			scrollTarget = sf::Vector2f(width, width);
+			camTarget = sf::Vector2f(0, height / 2);
+
+			std::string w = "thee";
+
+			std::cout << "'" << w << "' count: " << tree.count(w) << std::endl;
 		}
 
 		// Shows current frames per second and updates per second.
@@ -157,9 +206,9 @@ int main(int argc, char* argv[]) {
 
 	}
 
-	tree.inorder();
-	tree.preorder();
-	tree.postorder();
+	// Zipfian analysis
+
+
 
 	return 0;
 }
@@ -211,177 +260,9 @@ std::vector<std::string> ReadFile(std::string file_name) {
 
 			buffer.push_back(word);
 		}
-
-		/* // Converts our string into a stringstream
-		std::istringstream ss(str);
-		 // Temp double to store a converted value from a line
-		std::string token;
-		  // Reads all values from the stringstream (current row), converts to double
-		  while(getline(ss, token)){
-			  for (int i = 0; i < token; i++){
-
-			  }
-			  // Adds the converted value to the row
-			  (*tree).insert(token);
-		  }
-	  }*/
 	}
 
 	file.close();
 
 	return buffer;
 }
-
-/*
-void ReadFile(std::string file_name, RBTree* tree) {
-	// Create the input filestream - opens the file & prepares it for reading
-	std::ifstream file(file_name);
-
-	
-
-	// Temporary string to hold a single line of the file
-	std::string str;
-
-	std::string const delimiters = "" + ',' + '\'' + '"' + '-' + '?' + '\!' + '%' + '&' + '*' + '^' + '(' + ')' + '@' + '_' + ';' + ':' + '.' + '/' + '\\' + '\n';
-
-	// Reads all lines in the file, 1 at at time
-	while (file >> str) {
-
-		std::vector<std::string> words = split(str, delimiters);
-
-		for (int i = 0; i < words.size(); i++) {
-			// This line uses the transform method in the standard library algorithm to go through each character
-			// in a string and convert it to a lowercase using a lambda function that takes the character in, and
-			// returns (to the transform method, and thereby that specific character) a lowercase character.
-			std::transform(words[i].begin(), words[i].end(), words[i].begin(), [](unsigned char c) { return std::tolower(c); });
-
-			tree->insert(words[i]);
-		}
-
-		/* // Converts our string into a stringstream
-		std::istringstream ss(str);
-		 // Temp double to store a converted value from a line
-		std::string token;
-		  // Reads all values from the stringstream (current row), converts to double
-		  while(getline(ss, token)){
-			  for (int i = 0; i < token; i++){
-
-			  }
-			  // Adds the converted value to the row
-			  (*tree).insert(token);
-		  }
-	  }
-	}
-}
-*/
-
-/*
-#include "RBTree.h"
-#include "Renderer.h"
-#include <iostream>
-#include <SFML/Graphics.hpp>
-#include <SFML/System/Clock.hpp>
-
-int main()
-{
-
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Left-Leaning Red-Black Trees");
-	Renderer renderer(&window);
-	RBTree tree(&renderer);
-
-	// How many frames per second and updates per second that should be done.
-	int fps = 60;
-	int ups = 30;
-
-	// How many frames/updates have happened since last frame/update
-	int updates = 0;
-	int frames = 0;
-
-	// timers that have deltaTime added to them
-	int fpsTimer = 0;
-	int upsTimer = 0;
-	int statClock = 0;
-
-	int testCounter = 0;
-
-	sf::Clock clock;
-	sf::Vector2f target;
-
-	long int deltaTime = 0;
-	long long int millis = clock.getElapsedTime().asMilliseconds();
-
-	// Run loop
-	while (window.isOpen()) {
-		sf::Event event;
-
-		// While there are events in the event queue.
-		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed) {
-				window.close();
-			}
-			if (event.type == sf::Event::MouseButtonPressed) {
-				target = (sf::Vector2f)sf::Mouse::getPosition(window);
-				//tree.debugSetTarget(target);
-			}
-			if (event.type == sf::Event::KeyPressed) {
-				if (event.key.code == sf::Keyboard::Space) {
-					std::string s(1, char(97 + testCounter++));
-					tree.insert(s);
-				}
-			}
-		}
-
-		// find the time since the last loop, if applicable, then reset timer to this loop time.
-		deltaTime = clock.getElapsedTime().asMilliseconds() - millis;
-		millis = clock.getElapsedTime().asMilliseconds();
-
-		fpsTimer += deltaTime;
-		upsTimer += deltaTime;
-		statClock += deltaTime;
-
-		if (fpsTimer >= 1000 / fps) {
-			// Clear the window
-			window.clear(sf::Color(171.0f, 204.0f, 214.0f, 255.0f));
-
-			// Draw stuff here
-			tree.Draw(&window);
-
-			renderer.Render();
-
-			// Show drawn stuff
-			window.display();
-
-
-			// Reset frame timer and add a frame to count.
-			fpsTimer = 0;
-			frames++;
-		}
-
-		if (upsTimer >= 1000 / ups) {
-			// Do things that need updating (Animation movements)
-			tree.Update(deltaTime);
-		}
-
-		// Shows current frames per second and updates per second.
-		if (statClock >= 1000) {
-			std::cout << "FPS: " << frames << ", UPS: " << updates << std::endl;
-			statClock = 0;
-			frames = 0;
-			updates = 0;
-
-		}
-
-	}
-
-	std::cout << "Preorder" << std::endl;
-	tree.preorder();
-
-	std::cout << "Inorder" << std::endl;
-	tree.inorder();
-
-	std::cout << "Postorder" << std::endl;
-	tree.postorder();
-
-	return 0;
-}
-*/

@@ -66,10 +66,8 @@ int RBTree::value(std::string word) {
 }
 
 // returns true if word1 comes before word2. 
-bool areWordsInOrder(std::string word1, std::string word2) {
-	std::cout << word1 << " < " << word2 << std::endl;
-	bool test = word1 < word2;
-	return std::lexicographical_compare(word1.begin(), word1.end(), word2.begin(), word2.end());
+bool areWordsInOrder(std::string word1, std::string word2) {;
+	return word1 < word2;
 }
 
 RBTNode* RBTree::insert(std::string word, RBTNode* root, RBTNode* prev) {
@@ -81,26 +79,14 @@ RBTNode* RBTree::insert(std::string word, RBTNode* root, RBTNode* prev) {
 		return node;
 	}
 
-
 	if (word == root->word) {
 		root->counter++;
-		//ADD MORE
 	}
 	else if (areWordsInOrder(word, root->word)) {
-		std::cout << word << " : " << "left" << std::endl;
 		root->left = insert(word, root->left, root);
-		//root->left->red = true;
-
-		//nodes.push_back(root->left);
-
-
 	}
 	else {
-		std::cout << word << " : " << "right" << std::endl;
 		root->right = insert(word, root->right, root);
-		//root->right->red = true;
-		//nodes.push_back(root->right);
-		//std::cout << "r" << std::endl;
 	}
 
 	if (isRed(root->right) && !isRed(root->left)) {
@@ -116,7 +102,6 @@ RBTNode* RBTree::insert(std::string word, RBTNode* root, RBTNode* prev) {
 		root->red = true;
 		root->left->red = false;
 		root->right->red = false;
-
 	}
 
 	return root;
@@ -164,6 +149,7 @@ void RBTree::updateTargets(RBTNode* root, RBTNode* prev, int baseWidth) {
 	}
 
 	if (!prev) {
+		// ensure that the root is at the start and has no parent. The parent is for the line rendering.
 		root->target = sf::Vector2f(xStart, yStart);
 		root->parent = nullptr;
 	}
@@ -172,13 +158,14 @@ void RBTree::updateTargets(RBTNode* root, RBTNode* prev, int baseWidth) {
 	}
 
 	float xOff = (float)(baseWidth) / 2;
+	float yOff = yOffset * log2f(baseWidth + 1);
 
 	if (root->left) {
-		root->left->target = root->target + sf::Vector2f(-xOff * xOffset, yOffset * log2f(baseWidth + 1));
+		root->left->target = root->target + sf::Vector2f(-xOff * xOffset, yOff);
 	}
 
 	if (root->right) {
-		root->right->target = root->target + sf::Vector2f(xOff * xOffset, yOffset * log2f(baseWidth + 1));
+		root->right->target = root->target + sf::Vector2f(xOff * xOffset, yOff);
 	}
 
 	updateTargets(root->left, root, xOff);
@@ -207,6 +194,27 @@ void RBTree::postorder(RBTNode* root, std::ostream& os) {
 	os << root->word << ":" << root->red << ":" << root->counter << ", ";
 
 	return;
+}
+
+int RBTree::count(RBTNode* root, std::string key) {
+	if (!root) {
+		return 0;
+	}
+
+	if (key == root->word){
+		return root->counter;
+	}
+
+	if (areWordsInOrder(key, root->word)) {
+		return count(root->left, key);
+	}
+	else {
+		return count(root->right, key);
+	}
+}
+
+int RBTree::count(std::string key) {
+	return count(root, key);
 }
 
 void RBTree::destroy(RBTNode* root) {
