@@ -28,6 +28,11 @@ void Renderer::Render() {
 	for (RBTNode* node : nodes) {
 		node->draw(window);
 	}
+
+	//sf::RectangleShape box(sf::Vector2f(200,20));
+	//box.setFillColor(sf::Color::Black);
+
+	//window->draw(box);
 }
 
 void Renderer::RegisterNode(RBTNode* node) {

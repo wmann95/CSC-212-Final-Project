@@ -15,6 +15,7 @@ private:
 	std::vector<RBTNode*> nodes;
 	sf::Font font;
 	sf::Vector2f camPos;
+	std::string currWord;
 
 public:
 	Renderer(sf::RenderWindow* window);
@@ -32,6 +33,10 @@ public:
 	
 	sf::Font* getFont() {
 		return &font;
+	}
+
+	void setCurrWord(std::string word) {
+		currWord = word;
 	}
 };
 

@@ -171,10 +171,10 @@ void RBTree::updateTargets(RBTNode* root, RBTNode* prev, int baseWidth) {
 }
 
 void RBTree::Update(long long int millis) {
+	UpdateNodeTargets();
 	for (RBTNode* node : nodes) {
 		node->update(millis);
 	}
-	UpdateNodeTargets();
 }
 
 void RBTree::UpdateNodeTargets() {
@@ -283,8 +283,6 @@ void RBTNode::update(long long int millis) {
 */
 
 void RBTNode::draw(sf::RenderWindow* window) {
-
-
 
 	shape.setPosition(position - sf::Vector2f(shapeSize, shapeSize));
 	text.setPosition(position);
