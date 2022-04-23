@@ -21,9 +21,6 @@ int main(int argc, char* argv[]) {
 	int xSize = 800, ySize = 600;
 
 	sf::RenderWindow window(sf::VideoMode(xSize, ySize), title); // Open up a window of size xSize by ySize, and set the handle of the window to title.
-	sf::View view; // Create a view. This is essentially a camera in the world.
-	view.reset(sf::FloatRect(-400.0f, -25.0f, 800.0f, 600.0f)); // Resetting the view means that it will be the same size as the window, so the "scale" is one-to-one.
-																// This is also offsetting the camera by half the x-width and up a little bit.
 
 	Renderer renderer(&window); // Create the renderer and pass through the window pointer. This will be where the actual rendering is handled.
 
@@ -43,7 +40,7 @@ int main(int argc, char* argv[]) {
 	
 	// timers that have deltaTime added to them.
 	int fpsTimer = 0;
-	int upsTimer = 0;
+	int upsTimer = 16;
 	int statClock = 0;
 	int textClock = 0;
 	int endAnimLimit = 0;
@@ -53,22 +50,14 @@ int main(int argc, char* argv[]) {
 	long int deltaTime = 0; // Counts how many milliseconds have passed.
 	long long int millis = clock.getElapsedTime().asMilliseconds(); // Gets the current time in milliseconds since the last restart.
 
-
-	sf::Vector2f scroll(3.0f, 3.0f); // This is where the camera scroll is handled. Having this set to 3.0 in both x and y with different scrollTarget will cause a small animation on start.
-	sf::Vector2f scrollTarget(1.0f, 1.0f); // This is where the scroll is trying to get to.
-
-	sf::Vector2f cam(0.0f , 100.0f); // This is the current position of the view. Similar to the scroll, having a different camTarget will cause the cam to move towards that target.
-	sf::Vector2f camTarget(0, 250.0f); // Where the cam is trying to get.
-
 	tree.insert(words[counter++ % words.size()]); // Insert a single word to ensure there is one node already on screen to show the animation.
-	view.setSize(xSize * scroll.x, ySize * scroll.y); // Ensure the camera scroll is at the right scroll before doing any rendering.
-	view.setCenter(cam); // Ensure the camera is in the correct place before rendering.
 
 	// Flags used to manage the visualization.
 	bool pauseFlag = false; // Should words be getting put into the tree?
 	bool scrollLock = false; // Should the scroll (and movement) be locked? Used in the final animation.
 	bool endAnimShouldPlay = false; // Should the end animation play?
 	bool endAnimComplete = false; // Is the end animation done?
+
 
 	// Run loop
 	while (window.isOpen()) {
@@ -83,13 +72,13 @@ int main(int argc, char* argv[]) {
 			}
 			// Check if the mouse wheel was moved.
 			if (event.type == sf::Event::MouseWheelMoved && !scrollLock) {
-				// how much should each wheel move increase/decrease the zoom?
-				float factor = 1.5f;
-				
-				// The mouse wheel delta will always be either -1 or 1, so raising the factor to this delta
-				// will either scale the scrollTarget up, or shrink it down.
-				scrollTarget.x *= pow(factor, -event.mouseWheel.delta);
-				scrollTarget.y *= pow(factor, -event.mouseWheel.delta);
+				//std::cout << "Test" << std::endl;
+				if (event.mouseWheel.delta < 0) {
+					renderer.increaseScroll();
+				}
+				else {
+					renderer.decreaseScroll();
+				}
 			}
 			// Check if any keys have been pressed.
 			if (event.type == sf::Event::KeyPressed) {
@@ -112,6 +101,10 @@ int main(int argc, char* argv[]) {
 		statClock += deltaTime;
 		textClock += deltaTime;
 
+		if (endAnimShouldPlay) {
+			endAnimLimit += deltaTime;
+		}
+
 		// Limits the updates to being the required updates per second.
 		if (upsTimer >= 1000 / ups) {
 			// Do things that need updating (Animation movements)
@@ -122,37 +115,33 @@ int main(int argc, char* argv[]) {
 			// a key down. The key will type once, then pause, then start typing over and over. That pause is unwanted.
 			if (!scrollLock) {
 
-				camSpeed = camSpeed * scroll.x * 10.0f; // allows the camSpeed to increase based on the scroll level.
+				camSpeed = camSpeed * 10.0f; // allows the camSpeed to increase based on the scroll level.
 
 				float camMove = camSpeed * deltaTime / 1000.0f; // take the base cam speed, multiply it by the change in time.
+				sf::Vector2f camTargetOffset;
 
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-					camTarget.y += -camMove;
+					camTargetOffset.y += -camMove;
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-					camTarget.y += camMove;
+					camTargetOffset.y += camMove;
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-					camTarget.x += -camMove;
+					camTargetOffset.x += -camMove;
 				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-					camTarget.x += camMove;
+					camTargetOffset.x += camMove;
 				}
+
+				renderer.moveCam(camTargetOffset);
 			}
 			tree.Update(deltaTime); // Updates the tree nodes. This is where the nodes figure out where they ought to be.
 
-			scroll = lerp(scroll, scrollTarget, 0.8f * deltaTime * (endAnimShouldPlay ? 0.5f : 1.0f)); // Interpolate the scroll towards the scrollTarget by a factor of 0.8f * the deltaTime. One would assume that this is the same as setting the factor to 1,
-																   // but that causes the scroll to be very janky. Using the deltatime smooths it out.
-
-			view.setSize(xSize * scroll.x, ySize * scroll.y); // Change the view to be scaled according to the scroll.
-
-			cam = lerp(cam, camTarget, 0.95f); // Move the camera closer to the camTarget by a factor of 0.95f.
-
+			
 			// The end animation is comprised of a scroll out and a camera movement back to the center of the tree.
 			if (endAnimShouldPlay && !endAnimComplete) { // While the end animation should play and hasn't been complete.
-				double dist = sqrt(pow(camTarget.x - cam.x, 2) + pow(camTarget.y - cam.y, 2));
 				
-				endAnimLimit += deltaTime;
+				renderer.setCurrWord("Tree Completed");
 
 				if (endAnimLimit >= 2500) { // Wait 2.5 seconds then finish anim.
 					endAnimComplete = true;
@@ -161,7 +150,7 @@ int main(int argc, char* argv[]) {
 				}
 			}
 
-			view.setCenter(cam); // sets the views position to where the cam is. Using move would cause the view to constantly move, not track the cam position.
+			renderer.Update(deltaTime); // move camera and such
 
 			updates++;
 			upsTimer = 0;
@@ -171,17 +160,10 @@ int main(int argc, char* argv[]) {
 			// Clear the window
 			window.clear(sf::Color(171.0f, 204.0f, 214.0f, 255.0f));
 
-			// Draw stuff here
-
-			window.setView(view); // Ensures that the window is based around our current view.
-
-			renderer.Render(); // Goes through all of the nodes and draws their shape, words, and lines to their parents.
-
-			window.setView(window.getDefaultView()); // Reset the view back to the default. Keeps the window sane.
+			renderer.Render(); // Let the renderer do its thing
 
 			// Show drawn stuff
 			window.display();
-
 
 			// Reset frame timer and add a frame to count.
 			fpsTimer = 0;
@@ -190,7 +172,11 @@ int main(int argc, char* argv[]) {
 
 		// insert a word every 2/10's of a second.
 		if (textClock >= 200 && counter < words.size()) {
-			if(!pauseFlag) tree.insert(words[counter++ % words.size()]);
+			if (!pauseFlag){
+				std::string tmp = words[counter++ % words.size()];
+				tree.insert(tmp);
+				renderer.setCurrWord(tmp);
+			}
 			textClock = 0;
 		}
 		
@@ -199,18 +185,8 @@ int main(int argc, char* argv[]) {
 			scrollLock = true;
 			endAnimShouldPlay = true;
 
-			int treeHeight = tree.height();
-			float width = (pow(2, treeHeight) * tree.getNodeOffset().x) / xSize;
-			float height = (float)treeHeight * tree.getNodeOffset().y;
-			
-			width *= 1.1f;
+			renderer.PlayEnd(&tree);
 
-			scrollTarget = sf::Vector2f(width, width);
-			camTarget = sf::Vector2f(0, height / 2);
-
-			std::string w = "thee";
-
-			std::cout << "'" << w << "' count: " << tree.count(w) << std::endl;
 		}
 
 		// Shows current frames per second and updates per second.

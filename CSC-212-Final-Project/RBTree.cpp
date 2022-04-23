@@ -342,6 +342,10 @@ void RBTree::inorder(std::ostream& os) {
 	os << "\n";
 }
 
+//std::vector<std::pair<std::string, int>> RBTree::getWordCounts() {
+
+//}
+
 void RBTree::postorder(std::ostream& os) {
 	this->postorder(this->root, os);
 	os << "\n";
