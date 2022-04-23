@@ -26,8 +26,16 @@ int main(int argc, char* argv[]) {
 
 	RBTree tree(&renderer); // Create the tree, and pass in the renderer pointer. This is required because as the nodes are created, they need to register themselves
 							// to the renderer.
+	
+	std::vector<std::string> words;
 
-	std::vector<std::string> words = ReadFile(argv[1]); // get the wordlist.
+	if (argc == 1) {
+		 words = ReadFile("book.txt"); // get the wordlist.
+	}
+	else {
+		words = ReadFile(argv[1]); // get the wordlist.
+	}
+
 	int counter = 0; // used to increment through the word list.
 
 	// How many frames per second and updates per second that should be done.
@@ -114,8 +122,6 @@ int main(int argc, char* argv[]) {
 			// keystrokes a separate thing than keys being pressed. For instance, open a text file and try holding
 			// a key down. The key will type once, then pause, then start typing over and over. That pause is unwanted.
 			if (!scrollLock) {
-
-				camSpeed = camSpeed * 10.0f; // allows the camSpeed to increase based on the scroll level.
 
 				float camMove = camSpeed * deltaTime / 1000.0f; // take the base cam speed, multiply it by the change in time.
 				sf::Vector2f camTargetOffset;

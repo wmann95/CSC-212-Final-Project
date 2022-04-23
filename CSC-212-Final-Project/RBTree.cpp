@@ -48,6 +48,7 @@ RBTNode::RBTNode(Renderer* renderer, RBTNode* p, std::string word, bool color) {
 	// set the color
 	text.setFillColor(sf::Color::White);
 	text.setOutlineColor(sf::Color::Black);
+	text.setOutlineThickness(2.0f);
 
 	// set the text style
 	text.setStyle(sf::Text::Bold | sf::Text::Underlined);
@@ -285,22 +286,7 @@ void RBTNode::update(long long int millis) {
 void RBTNode::draw(sf::RenderWindow* window) {
 
 	shape.setPosition(position - sf::Vector2f(shapeSize, shapeSize));
-	text.setPosition(position);
-
-	if (parent) {
-
-		//std::cout << parent << std::endl;
-
-		sf::Vertex line[] = {
-			sf::Vertex(position),
-			sf::Vertex(parent->position)
-		};
-
-		line[0].color = sf::Color(0, 0, 0, 255);
-		line[1].color = sf::Color(0, 0, 0, 255);
-
-		window->draw(line, 2, sf::Lines);
-	}
+	text.setPosition(position - sf::Vector2f(shapeSize, shapeSize));
 
 	if (this->red) {
 		shape.setFillColor(sf::Color::Red);

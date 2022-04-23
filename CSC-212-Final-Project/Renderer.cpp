@@ -57,6 +57,23 @@ void Renderer::Render() {
 
 	// Draw all the nodes
 	for (RBTNode* node : nodes) {
+		if (node->parent) {
+			//std::cout << parent << std::endl;
+
+			sf::Vertex line[] = {
+				sf::Vertex(node->position),
+				sf::Vertex(node->parent->position)
+			};
+
+			line[0].color = sf::Color(0, 0, 0, 255);
+			line[1].color = sf::Color(0, 0, 0, 255);
+
+			window->draw(line, 2, sf::Lines);
+		}
+	}
+
+	// Draw all the nodes
+	for (RBTNode* node : nodes) {
 		node->draw(window);
 	}
 
@@ -69,6 +86,7 @@ void Renderer::Render() {
 
 	sf::Text wordText(this->currWord, font, 24);
 	wordText.setFillColor(sf::Color::White);
+	wordText.setOutlineColor(sf::Color::Black);
 
 	window->draw(box);
 	window->draw(wordText);
@@ -85,11 +103,13 @@ sf::Vector2f Renderer::getCameraPos() {
 }
 
 void Renderer::moveCam(float x, float y) {
-	camTarget += sf::Vector2f(x, y);
+	sf::Vector2f camSpeed(x / scroll.x * 10.0f, y / scroll.y * 10.0f); // allows the camSpeed to increase based on the scroll level.
+	camTarget += camSpeed;
 }
 
 void Renderer::moveCam(sf::Vector2f off) {
-	camTarget += off;
+	sf::Vector2f camSpeed(off.x * scroll.x * 10.0f, off.y * scroll.y * 10.0f); // allows the camSpeed to increase based on the scroll level.
+	camTarget += camSpeed;
 }
 
 void Renderer::increaseScroll() {
