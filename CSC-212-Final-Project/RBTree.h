@@ -56,6 +56,7 @@ private:
 	void preorder(RBTNode* root, std::ostream& os);
 	void inorder(RBTNode* root, std::ostream& os);
 	void postorder(RBTNode* root, std::ostream& os);
+	//std::vector<std::pair<std::string, int>> getWordCounts();
 
 	void updateTargets(RBTNode* root, RBTNode* prev, int baseWidth);
 
