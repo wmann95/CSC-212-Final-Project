@@ -83,7 +83,7 @@ RBTNode* RBTree::insert(std::string word, RBTNode* root, RBTNode* prev) {
 		root->counter++;
 		return root;
 	}
-	else if (areWordsInOrder(word, root->word)) {
+	else if (word < root->word) {
 		root->left = insert(word, root->left, root);
 	}
 	else {
