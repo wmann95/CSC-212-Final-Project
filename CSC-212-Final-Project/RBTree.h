@@ -56,7 +56,7 @@ private:
 	void preorder(RBTNode* root, std::ostream& os);
 	void inorder(RBTNode* root, std::ostream& os);
 	void postorder(RBTNode* root, std::ostream& os);
-	//std::vector<std::pair<std::string, int>> getWordCounts();
+	void getWordCounts(RBTNode*, std::vector<std::pair<std::string, int>>*);
 
 	void updateTargets(RBTNode* root, RBTNode* prev, int baseWidth);
 
@@ -87,6 +87,7 @@ public:
 	void preorder(std::ostream& os = std::cout);
 	void inorder(std::ostream& os = std::cout);
 	void postorder(std::ostream& os = std::cout);
+	void getWordCounts(std::vector<std::pair<std::string, int>>*);
 
 	bool search(std::string word);
 	void clear();

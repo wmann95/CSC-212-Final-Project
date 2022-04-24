@@ -1,169 +1,247 @@
-I am Sam
-Sam I am
 
-That Sam-I-am!
-That Sam-I-am!
-I do not like that Sam-I-am!
+Zipf's law (/zɪf/, not /tsɪpf/ as in German) is an empirical law formulated using mathematical statistics that refers to the fact that for many types of data studied in the physical and social sciences, the rank-frequency distribution is an inverse relation. The Zipfian distribution is one of a family of related discrete power law probability distributions. It is related to the zeta distribution, but is not identical.
 
-Do you like 
-green eggs and ham?
-I do not like them, Sam-I-am.
-I do not like
-green eggs and ham.
+Zipf's law was originally formulated in terms of quantitative linguistics, stating that given some corpus of natural language utterances, the frequency of any word is inversely proportional to its rank in the frequency table. Thus the most frequent word will occur approximately twice as often as the second most frequent word, three times as often as the third most frequent word, etc. For example, in the Brown Corpus of American English text, the word "the" is the most frequently occurring word, and by itself accounts for nearly 7% of all word occurrences (69,971 out of slightly over 1 million). True to Zipf's Law, the second-place word "of" accounts for slightly over 3.5% of words (36,411 occurrences), followed by "and" (28,852). Only 135 vocabulary items are needed to account for half the Brown Corpus.[1]
 
-Would you like them 
-here or there?
+The law is named after the American linguist George Kingsley Zipf (1902–1950), who popularized it and sought to explain it (Zipf 1935, 1949), though he did not claim to have originated it.[2] The French stenographer Jean-Baptiste Estoup (1868–1950) appears to have noticed the regularity before Zipf.[3] It was also noted in 1913 by German physicist Felix Auerbach (1856–1933).[4]
 
-I would not like them
-here or there.
-I would not like them anywhere. 
-
-I do not like
-green eggs and ham.
-I do not like them, Sam-I-am.
-
-Would you like them in a house?
-Would you like them with a mouse?
-
-I do not like them
-in a house.
-I do not like them
-with a mouse.
-I do not like them
-here or there.
-I do not like them
-anywhere.
-I do not like 
-green eggs and ham.
-I do not like them, 
-Sam-I-am.
-
-Would you eat them
-in a box?
-Would you eat them
-with a fox?
-
-Not in a box. 
-Not with a fox.
-Not in a house.
-Not with a mouse.
-I would not eat them
-here or there.
-I would not eat them anywhere.
-I would not eat green eggs and ham.
-I do not like them, Sam-I-am.
-
-Would you? Could you? In a car?
-Eat them! Eat them! Here they are.
-I would not, could not, in a car.
-
-You may like them. You will see. 
-You may like them in a tree!
-
-I would not, could not in a tree.
-Not in a car! You let me be.
-
-I do not like them in a box.
-I do not like them with a fox.
-I do not like them in a house.
-I do not like them with a mouse.
-I do not like them here or there.
-I do not like them anywhere.
-I do not like green eggs and ham.
-I do not like them, Sam-I-am.
-
-A train! A train!
-A train! A train!
-Could you, would you,
-on a train?
-
-Not in a train! Not in a tree!
-Not in a car! Sam! Let me be!
-
-I would not, could not, in a box.
-I could not, would not, with a fox.
-I will not eat them with a mouse.
-I will not eat them in a house.
-I will not eat them here or there.
-I will not eat them anywhere.
-I do not like green eggs and spam.
-I do not like them, Sam-I-am.
-
-Say! In the dark?
-Here in the dark!
-Would you, could you,
-in the dark?
-
-I would not, could not, in the dark.
-
-Would you, could you, in the rain?
-
-I would not, could not, in the rain.
-Not in the dark. Not on a train.
-Not in a car. Not in a tree.
-I do not like them, Sam, you see.
-Not in a house. Not in a box.
-Not with a mouse. Not with a fox.
-I will not eat them here or there.
-I do not like them anywhere!
-
-You do not like 
-green eggs and ham?
-I do not like them,
-Sam-I-am.
-
-Could you, would you, 
-with a goat?
-
-I would not, could not,
-with a goat!
-
-Would you, could you,
-on a boat?
-
-I could not, would not, 
-on a boat.
-I will not, will not, 
-with a goat.
-
-I will not eat them in the rain.
-I will not eat them on a train.
-Not in the dark! Not in a tree!
-Not in a car! You let me be!
-I do not like them in a box.
-I do not like them with a fox.
-I will not eat them in a house.
-I do not like them with a mouse.
-I do not like them here or there.
-I do not like them anywhere!
-I do not like green eggs and ham!
-I do not like them, Sam-I-am.
+The law is similar in concept, though not identical in distribution, to Benford's law.
 
 
-You do not like them. So you say.
-Try them! Try them! And you may.
-Try them and you may, I say.
+Contents
+1	Other data sets
+2	Theoretical review
+3	Statistical explanation
+4	Mathematical explanation
+5	Related laws
+6	Applications
+7	See also
+8	References
+9	Further reading
+10	External links
+Other data sets
+The same relationship occurs in many other rankings of human-created systems,[5] such as the ranks of mathematical expressions or ranks of notes in music[6] and even in uncontrolled environments, such as corporation sizes, income rankings, ranks of number of people watching the same TV channel,[7] cells' transcriptomes[8] and so on. The appearance of the distribution in rankings of cities by population was first noticed by Felix Auerbach in 1913,[4] leading to a broad literature of Zipf's law for cities.[9] However, more recent empirical[10][11] and theoretical[12] studies have challenged the relevance of Zipf's law for cities.
 
-Sam! If you will let me be,
-I will try them. You will see.
+Empirically, a data set can be tested to see whether Zipf's law applies by checking the goodness of fit of an empirical distribution to the hypothesized power law distribution with a Kolmogorov–Smirnov test, and then comparing the (log) likelihood ratio of the power law distribution to alternative distributions like an exponential distribution or lognormal distribution.[13]
 
-Say! I like green eggs and ham!
-I do! I like them, Sam-I-am!
-And I would eat them in a boat.
-And I would eat them with a goat...
+Theoretical review
+Zipf's law is most easily observed by plotting the data on a log-log graph, with the axes being log (rank order) and log (frequency). For example, the word "the" (as described above) would appear at x = log(1), y = log(69971). It is also possible to plot reciprocal rank against frequency or reciprocal frequency or interword interval against rank.[2] The data conform to Zipf's law to the extent that the plot is linear.
 
-And I will eat them in the rain.
-And in the dark. And on a train.
-And in a car. And in a tree.
-They are so good, so good, you see!
+Formally, let:
 
-So I will eat them in a box.
-And I will eat them with a fox.
-And I will eat them in a house.
-And I will eat them with a mouse.
-And I will eat them here and there.
-Say! I will eat them anywhere!
-I do so like
-green eggs and ham!
-Thank you!
-Thank you, Sam-I-am!
+N be the number of elements;
+k be their rank;
+s be the value of the exponent characterizing the distribution.
+Zipf's law then predicts that out of a population of N elements, the normalized frequency of the element of rank k, f(k;s,N), is:
+
+{\displaystyle f(k;s,N)={\frac {1/k^{s}}{\sum \limits _{n=1}^{N}(1/n^{s})}}}{\displaystyle f(k;s,N)={\frac {1/k^{s}}{\sum \limits _{n=1}^{N}(1/n^{s})}}}
+Zipf's law holds if the number of elements with a given frequency is a random variable with power law distribution {\displaystyle p(f)=\alpha f^{-1-1/s}.}p(f)=\alpha f^{-1-1/s}.[14]
+
+It has been claimed that this representation of Zipf's law is more suitable for statistical testing, and in this way it has been analyzed in more than 30,000 English texts. The goodness-of-fit tests yield that only about 15% of the texts are statistically compatible with this form of Zipf's law. Slight variations in the definition of Zipf's law can increase this percentage up to close to 50%.[15]
+
+In the example of the frequency of words in the English language, N is the number of words in the English language and, if we use the classic version of Zipf's law, the exponent s is 1. f(k; s,N) will then be the fraction of the time the kth most common word occurs.
+
+The law may also be written:
+
+{\displaystyle f(k;s,N)={\frac {1}{k^{s}H_{N,s}}}}f(k;s,N)={\frac {1}{k^{s}H_{N,s}}}
+where HN,s is the Nth generalized harmonic number.
+
+The simplest case of Zipf's law is a "
+1
+/
+f
+" function. Given a set of Zipfian distributed frequencies, sorted from most common to least common, the second most common frequency will occur half as often as the first, the third most common frequency will occur 
+1
+/
+3
+ as often as the first, and the nth most common frequency will occur 
+1
+/
+n
+ as often as the first. However, this cannot hold exactly, because items must occur an integer number of times; there cannot be 2.5 occurrences of a word. Nevertheless, over fairly wide ranges, and to a fairly good approximation, many natural phenomena obey Zipf's law.
+
+In human languages, word frequencies have a very heavy-tailed distribution, and can therefore be modeled reasonably well by a Zipf distribution with an s close to 1.
+
+As long as the exponent s exceeds 1, it is possible for such a law to hold with infinitely many words, since if s > 1 then
+
+{\displaystyle \zeta (s)=\sum _{n=1}^{\infty }{\frac {1}{n^{s}}}<\infty .\!}\zeta (s)=\sum _{n=1}^{\infty }{\frac {1}{n^{s}}}<\infty .\!
+where ζ is Riemann's zeta function.
+
+Statistical explanation
+
+A plot of the rank versus frequency for the first 10 million words in 30 Wikipedias (dumps from October 2015) in a log-log scale.
+Although Zipf's Law holds for all languages, even non-natural ones like Esperanto,[16] the reason is still not well understood.[17] However, it may be partially explained by the statistical analysis of randomly generated texts. Wentian Li has shown that in a document in which each character has been chosen randomly from a uniform distribution of all letters (plus a space character), the "words" with different lengths follow the macro-trend of the Zipf's law (the more probable words are the shortest with equal probability).[18] Vitold Belevitch, in a paper entitled On the Statistical Laws of Linguistic Distribution, offers a mathematical derivation. He took a large class of well-behaved statistical distributions (not only the normal distribution) and expressed them in terms of rank. He then expanded each expression into a Taylor series. In every case Belevitch obtained the remarkable result that a first-order truncation of the series resulted in Zipf's law. Further, a second-order truncation of the Taylor series resulted in Mandelbrot's law.[19][20]
+
+The principle of least effort is another possible explanation: Zipf himself proposed that neither speakers nor hearers using a given language want to work any harder than necessary to reach understanding, and the process that results in approximately equal distribution of effort leads to the observed Zipf distribution.[21][22]
+
+Similarly, preferential attachment (intuitively, "the rich get richer" or "success breeds success") that results in the Yule–Simon distribution has been shown to fit word frequency versus rank in language[23] and population versus city rank[24] better than Zipf's law. It was originally derived to explain population versus rank in species by Yule, and applied to cities by Simon.
+
+Mathematical explanation
+Atlas models are systems of exchangeable positive-valued diffusion processes with drift and variance parameters that depend only on the rank of the process. It has been shown mathematically that Zipf's law holds for Atlas models that satisfy certain natural regularity conditions.[25] Atlas models can be used to represent empirical systems of time-dependent multivariate data, including, e.g., the frequency of words in a written language or the size of companies. An Atlas model that represents an empirical system will have the same stationary distribution as the empirical system, so if the Atlas model follows Zipf's law, the system will also follow Zipf's law. Since Atlas models that satisfy natural regularity conditions follow Zipf's law, this accounts for its universality.[26]
+
+In the figure above of the 10 million Wikipedia words, the log-log plots are not precisely straight lines but rather slightly concave curves with a tangent of slope -1 at some point along the curve. Such distributions are usually referred to as quasi-Zipfian distributions, and most systems of time-dependent empirical data that are said to follow Zipf's law are actually quasi-Zipfian. Quasi-Zipfian systems can be represented by quasi-Atlas models, and quasi-Atlas models are amenable to mathematical treatment similar to that for Zipf's law.
+
+Related laws
+
+A plot of word frequency in Wikipedia (November 27, 2006). The plot is in log-log coordinates. x  is rank of a word in the frequency table; y  is the total number of the word's occurrences. Most popular words are "the", "of" and "and", as expected. Zipf's law corresponds to the middle linear portion of the curve, roughly following the green (1/x)  line, while the early part is closer to the magenta (1/x0.5) line while the later part is closer to the cyan (1/(k + x)2.0) line. These lines correspond to three distinct parameterizations of the Zipf–Mandelbrot distribution, overall a broken power law with three segments: a head, middle, and tail.
+Zipf's law in fact refers more generally to frequency distributions of "rank data", in which the relative frequency of the nth-ranked item is given by the zeta distribution, 1/(nsζ(s)), where the parameter s > 1 indexes the members of this family of probability distributions. Indeed, Zipf's law is sometimes synonymous with "zeta distribution", since probability distributions are sometimes called "laws". This distribution is sometimes called the Zipfian distribution.
+
+A generalization of Zipf's law is the Zipf–Mandelbrot law, proposed by Benoit Mandelbrot, whose frequencies are:
+
+{\displaystyle f(k;N,q,s)={\frac {[{\text{constant}}]}{(k+q)^{s}}}.\,}{\displaystyle f(k;N,q,s)={\frac {[{\text{constant}}]}{(k+q)^{s}}}.\,}
+The "constant" is the reciprocal of the Hurwitz zeta function evaluated at s. In practice, as easily observable in distribution plots for large corpora, the observed distribution can be modelled more accurately as a sum of separate distributions for different subsets or subtypes of words that follow different parameterizations of the Zipf–Mandelbrot distribution, in particular the closed class of functional words exhibit s lower than 1, while open-ended vocabulary growth with document size and corpus size require s greater than 1 for convergence of the Generalized Harmonic Series.[2]
+
+Zipfian distributions can be obtained from Pareto distributions by an exchange of variables.[14]
+
+The Zipf distribution is sometimes called the discrete Pareto distribution[27] because it is analogous to the continuous Pareto distribution in the same way that the discrete uniform distribution is analogous to the continuous uniform distribution.
+
+The tail frequencies of the Yule–Simon distribution are approximately
+
+{\displaystyle f(k;\rho )\approx {\frac {[{\text{constant}}]}{k^{\rho +1}}}}{\displaystyle f(k;\rho )\approx {\frac {[{\text{constant}}]}{k^{\rho +1}}}}
+for any choice of ρ > 0.
+
+In the parabolic fractal distribution, the logarithm of the frequency is a quadratic polynomial of the logarithm of the rank. This can markedly improve the fit over a simple power-law relationship.[28] Like fractal dimension, it is possible to calculate Zipf dimension, which is a useful parameter in the analysis of texts.[29]
+
+It has been argued that Benford's law is a special bounded case of Zipf's law,[28] with the connection between these two laws being explained by their both originating from scale invariant functional relations from statistical physics and critical phenomena.[30] The ratios of probabilities in Benford's law are not constant. The leading digits of data satisfying Zipf's law with s = 1 satisfy Benford's law.
+
+{\displaystyle n}n	Benford's law: {\displaystyle P(n)=}P(n)=
+{\displaystyle \log _{10}(n+1)-\log _{10}(n)}\log _{10}(n+1)-\log _{10}(n)	{\displaystyle {\frac {\log(P(n)/P(n-1))}{\log(n/(n-1))}}}{\displaystyle {\frac {\log(P(n)/P(n-1))}{\log(n/(n-1))}}}
+1	0.30103000	
+2	0.17609126	−0.7735840
+3	0.12493874	−0.8463832
+4	0.09691001	−0.8830605
+5	0.07918125	−0.9054412
+6	0.06694679	−0.9205788
+7	0.05799195	−0.9315169
+8	0.05115252	−0.9397966
+9	0.04575749	−0.9462848
+Applications
+In information theory, a symbol (event, signal) of probability {\displaystyle p}p contains {\displaystyle -\log _{2}(1/p)}{\displaystyle -\log _{2}(1/p)} bits of information. Hence, Zipf's law for natural numbers: {\displaystyle \Pr(x)\approx 1/x}{\displaystyle \Pr(x)\approx 1/x} is equivalent with number {\displaystyle x}x containing {\displaystyle \log _{2}(x)}\log _{2}(x) bits of information. To add information from a symbol of probability {\displaystyle p}p into information already stored in a natural number {\displaystyle x}x, we should go to {\displaystyle x'}x' such that {\displaystyle \log _{2}(x')\approx \log _{2}(x)+\log _{2}(1/p)}{\displaystyle \log _{2}(x')\approx \log _{2}(x)+\log _{2}(1/p)}, or equivalently {\displaystyle x'\approx x/p}{\displaystyle x'\approx x/p}. For instance, in standard binary system we would have {\displaystyle x'=2x+s}{\displaystyle x'=2x+s}, what is optimal for {\displaystyle \Pr(s=0)=\Pr(s=1)=1/2}{\displaystyle \Pr(s=0)=\Pr(s=1)=1/2} probability distribution. Using {\displaystyle x'\approx x/p}{\displaystyle x'\approx x/p} rule for a general probability distribution is the base of Asymmetric Numeral Systems family of entropy coding methods used in data compression, whose state distribution is also governed by Zipf's law.
+
+Zipf's law has been used for extraction of parallel fragments of texts out of comparable corpora.[31] Zipf's law has also been used by Laurance Doyle and others at the SETI Institute as part of the search for extraterrestrial intelligence.[32][33]
+
+The Voynich Manuscript, which is a 15th-century codex, also falls in line with Zipf's law, indicating that text is most likely not a hoax but rather written in an obscure language or cipher.[34][35]
+
+Alexander Gelbukh and Grigori Sidorov (2001) "Zipf and Heaps Laws’ Coefficients Depend on Language". Proc. CICLing-2001, Conference on Intelligent Text Processing and Computational Linguistics, February 18–24, 2001, Mexico City. Lecture Notes in Computer Science N 2004, ISSN 0302-9743, ISBN 3-540-41687-0, Springer-Verlag: 332–335.
+Damián H. Zanette (2006) "Zipf's law and the creation of musical context," Musicae Scientiae 10: 3–18.
+Frans J. Van Droogenbroeck (2016), Handling the Zipf distribution in computerized authorship attribution
+Frans J. Van Droogenbroeck (2019), An essential rephrasing of the Zipf-Mandelbrot law to solve authorship attribution applications by Gaussian statistics
+Kali R. (2003) "The city as a giant component: a random graph approach to Zipf's law," Applied Economics Letters 10: 717–720(4)
+Gabaix, Xavier (August 1999). "Zipf's Law for Cities: An Explanation" (PDF). Quarterly Journal of Economics. 114 (3): 739–67. CiteSeerX 10.1.1.180.4097. doi:10.1162/003355399556133. ISSN 0033-5533.
+Axtell, Robert L; Zipf distribution of US firm sizes, Science, 293, 5536, 1818, 2001, American Association for the Advancement of Science
+Ramu Chenna, Toby Gibson; Evaluation of the Suitability of a Zipfian Gap Model for Pairwise Sequence Alignment, International Conference on Bioinformatics Computational Biology: 2011.
+Shyklo A. (2017); Simple Explanation of Zipf's Mystery via New Rank-Share Distribution, Derived from Combinatorics of the Ranking Process, Available at SSRN: https://ssrn.com/abstract=2918642.
+External links
+Library resources about
+Zipf's law
+Resources in your library
+Resources in other libraries
+	Wikimedia Commons has media related to Zipf's law.
+Strogatz, Steven (2009-05-29). "Guest Column: Math and the City". The New York Times. Retrieved 2009-05-29.—An article on Zipf's law applied to city populations
+Seeing Around Corners (Artificial societies turn up Zipf's law)
+PlanetMath article on Zipf's law
+Distributions de type "fractal parabolique" dans la Nature (French, with English summary)
+An analysis of income distribution
+Zipf List of French words
+Zipf list for English, French, Spanish, Italian, Swedish, Icelandic, Latin, Portuguese and Finnish from Gutenberg Project and online calculator to rank words in texts
+Citations and the Zipf–Mandelbrot's law
+Zipf's Law examples and modelling (1985)
+Complex systems: Unzipping Zipf's law (2011)
+Benford’s law, Zipf’s law, and the Pareto distribution by Terence Tao.
+"Zipf law", Encyclopedia of Mathematics, EMS Press, 2001 [1994]
+vte
+Probability distributions (List)
+Discrete
+univariate	
+with finite
+support	
+BenfordBernoullibeta-binomialbinomialcategoricalhypergeometric negativePoisson binomialRademachersolitondiscrete uniformZipfZipf–Mandelbrot
+with infinite
+support	
+beta negative binomialBorelConway–Maxwell–Poissondiscrete phase-typeDelaporteextended negative binomialFlory–SchulzGauss–Kuzmingeometriclogarithmicmixed Poissonnegative binomialPanjerparabolic fractalPoissonSkellamYule–Simonzeta
+Continuous
+univariate	
+supported on a
+bounded interval	
+arcsineARGUSBalding–NicholsBatesbetabeta rectangularcontinuous BernoulliIrwin–HallKumaraswamylogit-normalnoncentral betaPERTraised cosinereciprocaltriangularU-quadraticuniformWigner semicircle
+supported on a
+semi-infinite
+interval	
+BeniniBenktander 1st kindBenktander 2nd kindbeta primeBurrchichi-squared noncentralinverse scaledDagumDavisErlang hyperexponential hyperexponentialhypoexponentiallogarithmicF noncentralfolded normalFréchetgamma generalizedinversegamma/GompertzGompertz shiftedhalf-logistichalf-normalHotelling's T-squaredinverse Gaussian generalizedKolmogorovLévylog-Cauchylog-Laplacelog-logisticlog-normallog-tLomaxmatrix-exponentialMaxwell–BoltzmannMaxwell–JüttnerMittag-LefflerNakagamiParetophase-typePoly-WeibullRayleighrelativistic Breit–WignerRicetruncated normaltype-2 GumbelWeibull discreteWilks's lambda
+supported
+on the whole
+real line	
+Cauchyexponential powerFisher's zGaussian qgeneralized normalgeneralized hyperbolicgeometric stableGumbelHoltsmarkhyperbolic secantJohnson's SULandauLaplace asymmetriclogisticnoncentral tnormal (Gaussian)normal-inverse Gaussianskew normalslashstableStudent's ttype-1 GumbelTracy–Widomvariance-gammaVoigt
+with support
+whose type varies	
+generalized chi-squaredgeneralized extreme valuegeneralized ParetoMarchenko–Pasturq-exponentialq-Gaussianq-Weibullshifted log-logisticTukey lambda
+Mixed
+univariate	
+continuous-
+discrete	
+Rectified Gaussian
+Multivariate
+(joint)	
+Discrete: Ewensmultinomial DirichletnegativeContinuous: Dirichlet generalizedmultivariate Laplacemultivariate normalmultivariate stablemultivariate tnormal-gamma inverseMatrix-valued: LKJmatrix normalmatrix tmatrix gamma inverse matrix gammaWishart normalinversenormal-inverse
+Directional	
+Univariate (circular) directional Circular uniformunivariate von Miseswrapped normalwrapped Cauchywrapped exponentialwrapped asymmetric Laplacewrapped LévyBivariate (spherical) KentBivariate (toroidal) bivariate von MisesMultivariate von Mises–FisherBingham
+Degenerate
+and singular	
+Degenerate Dirac delta functionSingular Cantor
+Families	
+Circularcompound Poissonellipticalexponentialnatural exponentiallocation–scalemaximum entropymixturePearsonTweediewrapped
+Authority control: National libraries Edit this at Wikidata	
+Germany
+Categories: Discrete distributionsComputational linguisticsPower lawsStatistical lawsEmpirical lawsEponymsTails of probability distributionsQuantitative linguisticsBibliometricsCorpus linguistics1949 introductions
+Navigation menu
+Not logged in
+Talk
+Contributions
+Create account
+Log in
+ArticleTalk
+ReadEditView history
+Search
+Search Wikipedia
+Main page
+Contents
+Current events
+Random article
+About Wikipedia
+Contact us
+Donate
+Contribute
+Help
+Learn to edit
+Community portal
+Recent changes
+Upload file
+Tools
+What links here
+Related changes
+Special pages
+Permanent link
+Page information
+Cite this page
+Wikidata item
+Print/export
+Download as PDF
+Printable version
+In other projects
+Wikimedia Commons
+
+Languages
+العربية
+Deutsch
+Español
+Français
+한국어
+Italiano
+Русский
+اردو
+中文
+26 more
+Edit links
+This page was last edited on 25 February 2022, at 11:07 (UTC).
+Text is available under the Creative Commons Attribution-ShareAlike License 3.0; additional terms may apply. By using this site, you agree to the Terms of Use and Privacy Policy. Wikipedia® is a registered trademark of the Wikimedia Foundation, Inc., a non-profit organization.
+Privacy policyAbout WikipediaDisclaimersContact WikipediaMobile viewDevelopersStatisticsCookie statementWikimedia FoundationPowered by MediaWiki

@@ -81,6 +81,7 @@ RBTNode* RBTree::insert(std::string word, RBTNode* root, RBTNode* prev) {
 
 	if (word == root->word) {
 		root->counter++;
+		return root;
 	}
 	else if (areWordsInOrder(word, root->word)) {
 		root->left = insert(word, root->left, root);
@@ -128,20 +129,8 @@ void RBTree::preorder(RBTNode* root, std::ostream& os) {
 	return;
 }
 
-void RBTree::inorder(RBTNode* root, std::ostream& os) {
-	if (!root) {
-		return;
-	}
-
-	this->inorder(root->left, os);
-	os << root->word << ":" << root->red << ":" << root->counter << ", ";
-	this->inorder(root->right, os);
-
-	return;
-}
-
 void RBTree::updateTargets(RBTNode* root, RBTNode* prev, int baseWidth) {
-	
+
 	if (!root) {
 		return;
 	}
@@ -180,6 +169,28 @@ void RBTree::Update(long long int millis) {
 
 void RBTree::UpdateNodeTargets() {
 	updateTargets(root, nullptr, pow(2, height() - 1));
+}
+
+void RBTree::inorder(RBTNode* root, std::ostream& os) {
+	if (!root) {
+		return;
+	}
+
+	this->inorder(root->left, os);
+	os << root->word << ":" << root->red << ":" << root->counter << ", ";
+	this->inorder(root->right, os);
+
+	return;
+}
+
+void RBTree::getWordCounts(RBTNode* root, std::vector<std::pair<std::string, int>>* in) {
+	if (!root) {
+		return;
+	}
+
+	getWordCounts(root->left, in);
+	in->push_back(std::pair<std::string, int>(root->word, root->counter));
+	getWordCounts(root->right, in);
 }
 
 void RBTree::postorder(RBTNode* root, std::ostream& os) {
@@ -328,9 +339,9 @@ void RBTree::inorder(std::ostream& os) {
 	os << "\n";
 }
 
-//std::vector<std::pair<std::string, int>> RBTree::getWordCounts() {
-
-//}
+void RBTree::getWordCounts(std::vector<std::pair<std::string, int>>* in) {
+	getWordCounts(root, in);
+}
 
 void RBTree::postorder(std::ostream& os) {
 	this->postorder(this->root, os);

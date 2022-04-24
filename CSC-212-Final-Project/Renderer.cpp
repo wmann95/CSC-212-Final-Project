@@ -108,7 +108,7 @@ void Renderer::moveCam(float x, float y) {
 }
 
 void Renderer::moveCam(sf::Vector2f off) {
-	sf::Vector2f camSpeed(off.x * scroll.x * 10.0f, off.y * scroll.y * 10.0f); // allows the camSpeed to increase based on the scroll level.
+	sf::Vector2f camSpeed(off.x * scroll.x * 5.0f, off.y * scroll.y * 5.0f); // allows the camSpeed to increase based on the scroll level.
 	camTarget += camSpeed;
 }
 

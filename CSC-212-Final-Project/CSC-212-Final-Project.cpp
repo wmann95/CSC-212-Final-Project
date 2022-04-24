@@ -7,12 +7,23 @@
 #include <sstream>
 #include <fstream>
 #include <cctype>
+#include <cmath>
 #include <algorithm>
 #include <SFML/Window/Keyboard.hpp>
 
 std::vector<std::string> ReadFile(std::string file_name);
+double zeta(double n, double s);
 
 int main(int argc, char* argv[]) {
+	
+	std::vector<std::string> words;
+
+	if (argc == 1) {
+		words = ReadFile("book.txt"); // get the wordlist.
+	}
+	else {
+		words = ReadFile(argv[1]); // get the wordlist.
+	}
 
 	// Title the window should take. This will be used to easily add a FPS and UPS counter to the window title.
 	std::string title = "Left-Leaning Red-Black Trees";
@@ -26,21 +37,12 @@ int main(int argc, char* argv[]) {
 
 	RBTree tree(&renderer); // Create the tree, and pass in the renderer pointer. This is required because as the nodes are created, they need to register themselves
 							// to the renderer.
-	
-	std::vector<std::string> words;
-
-	if (argc == 1) {
-		 words = ReadFile("book.txt"); // get the wordlist.
-	}
-	else {
-		words = ReadFile(argv[1]); // get the wordlist.
-	}
 
 	int counter = 0; // used to increment through the word list.
 
 	// How many frames per second and updates per second that should be done.
 	int fps = 60;
-	int ups = 60;
+	int ups = 30;
 
 	// How many frames/updates have happened since last frame/update.
 	int updates = 0;
@@ -48,7 +50,7 @@ int main(int argc, char* argv[]) {
 	
 	// timers that have deltaTime added to them.
 	int fpsTimer = 0;
-	int upsTimer = 16;
+	int upsTimer = 0;
 	int statClock = 0;
 	int textClock = 0;
 	int endAnimLimit = 0;
@@ -211,10 +213,52 @@ int main(int argc, char* argv[]) {
 	}
 
 	// Zipfian analysis
+	std::cout << "Zipf" << std::endl;
 
+	std::vector<std::pair<std::string, int>> wordCounts;
+	std::vector<int> zipfPredict;
+	std::vector<int> mandelbrotPredict;
 
+	tree.getWordCounts(&wordCounts);
+
+	// sort the wordList using a lambda comparator comparing the counts.
+	std::sort(wordCounts.begin(), wordCounts.end(), [](std::pair<std::string, int> p1, std::pair<std::string, int> p2) {return p1.second > p2.second; });
+
+	zipfPredict.push_back(wordCounts[0].second);
+	mandelbrotPredict.push_back(wordCounts[0].second);
+
+	double s = 1.1;
+
+	// Make predictions based on index in the list and the count of the first word
+	for (int i = 1; i < wordCounts.size(); i++) {
+		zipfPredict.push_back(((1.0 / pow(i + 1.0, s)) / (zeta(words.size(), s))) * wordCounts[0].second);
+		mandelbrotPredict.push_back(std::ceil((1.0 / ((double)i + 1 + 2.7) * wordCounts[0].second)));
+	}
+
+	std::ofstream out;
+
+	out.open("output.txt");
+
+	for (int i = 0; i < wordCounts.size(); i++) {
+		std::pair<std::string, int> p = wordCounts[i];
+		out << "'" << p.first << "' count: " << p.second << " || Zipfian prediction: " << zipfPredict[i] << " || Zipfian accuracy: " << (zipfPredict[i] > p.second ? (double)p.second / (double)zipfPredict[i] : (double)zipfPredict[i] / (double)p.second) << std::endl;
+		out << "'" << p.first << "' count: " << p.second << " || Mandelbrot prediction: " << mandelbrotPredict[i] << " || Mandelbrot accuracy: " << (mandelbrotPredict[i] > p.second ? (double)p.second / (double)mandelbrotPredict[i] : (double)mandelbrotPredict[i] / (double)p.second) << std::endl;
+	}
+
+	out.close();
 
 	return 0;
+}
+
+double zeta(double n, double s)
+{
+	double output = 0;
+
+	for (int i = 1; i < n; i++) {
+		output += 1 / pow(n, s);
+	}
+
+	return output;
 }
 
 std::vector<std::string> ReadFile(std::string file_name) {
