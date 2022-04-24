@@ -27,7 +27,9 @@ RBTNode::RBTNode(Renderer* renderer, RBTNode* p) {
 	text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 }
 
+// Creates a Node
 RBTNode::RBTNode(Renderer* renderer, RBTNode* p, std::string word, bool color) {
+	
 	this->word = word;
 	this->counter = 1;
 	this->left = nullptr;
@@ -56,6 +58,7 @@ RBTNode::RBTNode(Renderer* renderer, RBTNode* p, std::string word, bool color) {
 
 RBTNode::~RBTNode() {}
 
+//Creates a value for a word
 int RBTree::value(std::string word) {
 	int sum = 0;
 	for (unsigned int i = 0; i < word.size(); i++) {
@@ -70,34 +73,45 @@ bool areWordsInOrder(std::string word1, std::string word2) {;
 	return word1 < word2;
 }
 
+// Inserts a Node
 RBTNode* RBTree::insert(std::string word, RBTNode* root, RBTNode* prev) {
-
+	
+	// checks if a root is found in the tree
 	if (!root) {
 		RBTNode* node = new RBTNode(renderer, prev, word, true);
 		nodes.push_back(node);
 
 		return node;
 	}
-
+	
+	// checks if word that is trying to be inserted is found in tree
 	if (word == root->word) {
+		// if found then add to counter and do not make new node
 		root->counter++;
 		return root;
 	}
+	
+	// checks if word is less than the comparison node
 	else if (word < root->word) {
+		// goes to the left
 		root->left = insert(word, root->left, root);
 	}
 	else {
+		// goes to the right
 		root->right = insert(word, root->right, root);
 	}
-
+	
+	// checks if left rotation is necessary
 	if (isRed(root->right) && !isRed(root->left)) {
 		root = rotateLeft(root);
 	}
-
+	
+	// checks if right rotation is necessary
 	if (isRed(root->left) && isRed(root->left->left)) {
 		root = rotateRight(root);
 	}
-
+	
+	// checks if color flip is necessary
 	if (isRed(root->left) && isRed(root->right)) {
 		root->red = true;
 		root->left->red = false;
