@@ -219,78 +219,102 @@ void RBTree::postorder(RBTNode* root, std::ostream& os) {
 	return;
 }
 
+// finds the count of how many times a word appears
 int RBTree::count(RBTNode* root, std::string key) {
+	
+	// checks if there is a root node
 	if (!root) {
 		return 0;
 	}
-
+	
+	// once the key is equal to a word, returns the count
 	if (key == root->word){
 		return root->counter;
 	}
-
+	
+	// goes to the left
 	if (areWordsInOrder(key, root->word)) {
 		return count(root->left, key);
 	}
+	
+	//goes to the right
 	else {
 		return count(root->right, key);
 	}
 }
 
+// returns count with the root and key
 int RBTree::count(std::string key) {
 	return count(root, key);
 }
 
+// destroys the tree from the leaves up
 void RBTree::destroy(RBTNode* root) {
+	// stops once there is no root
 	if (!root) {
 		return;
 	}
-
+	 // deletes nodes
 	this->destroy(root->left);
 	this->destroy(root->right);
 	delete root->left;
 	delete root->right;
 }
 
+// searches tree for specific word
 bool RBTree::search(std::string word, RBTNode* root) {
+	
+	// checks of there is a root
 	if (!root) {
 		return false;
 	}
-
+	
+	// checks if words are the same
 	if ((value(word) == value(root->word)) && (word == root->word)) {
 		return true;
 	}
-
+	
+	// checks child node to the left
 	if (word < root->word) {
 		return this->search(word, root->left);
 	}
+	
+	// checks child node to the right
 	else {
 		return this->search(word, root->right);
 	}
 }
 
+// performs a left loation
 RBTNode* RBTree::rotateLeft(RBTNode* root) {
+	
+	// changes directions of nodes
 	RBTNode* p = root->right;
-
 	root->right = root->right->left;
-
 	p->left = root;
-
+	
+	// color flips
 	p->red = p->left->red;
 	p->left->red = true;
 
 	return p;
 }
 
+// performs a right rotation
 RBTNode* RBTree::rotateRight(RBTNode* root) {
+	
+	//changes direction of nodes
 	RBTNode* p = root->left;
 	root->left = root->left->right;
 	p->right = root;
-
+	
+	//color flips
 	p->red = p->right->red;
 	p->right->red = true;
 	return p;
 }
 
+// checks the color of the node
 bool RBTree::isRed(RBTNode* node) {
 	if (!node) {
 		return false;
