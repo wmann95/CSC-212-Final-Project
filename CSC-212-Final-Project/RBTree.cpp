@@ -27,7 +27,9 @@ RBTNode::RBTNode(Renderer* renderer, RBTNode* p) {
 	text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 }
 
+// Creates a Node
 RBTNode::RBTNode(Renderer* renderer, RBTNode* p, std::string word, bool color) {
+	
 	this->word = word;
 	this->counter = 1;
 	this->left = nullptr;
@@ -56,6 +58,7 @@ RBTNode::RBTNode(Renderer* renderer, RBTNode* p, std::string word, bool color) {
 
 RBTNode::~RBTNode() {}
 
+//Creates a value for a word
 int RBTree::value(std::string word) {
 	int sum = 0;
 	for (unsigned int i = 0; i < word.size(); i++) {
@@ -65,34 +68,50 @@ int RBTree::value(std::string word) {
 	return sum;
 }
 
-RBTNode* RBTree::insert(std::string word, RBTNode* root, RBTNode* prev) {
+// returns true if word1 comes before word2. 
+bool areWordsInOrder(std::string word1, std::string word2) {;
+	return word1 < word2;
+}
 
+// Inserts a Node
+RBTNode* RBTree::insert(std::string word, RBTNode* root, RBTNode* prev) {
+	
+	// checks if a root is found in the tree
 	if (!root) {
 		RBTNode* node = new RBTNode(renderer, prev, word, true);
 		nodes.push_back(node);
 
 		return node;
 	}
-
+	
+	// checks if word that is trying to be inserted is found in tree
 	if (word == root->word) {
+		// if found then add to counter and do not make new node
 		root->counter++;
 		return root;
 	}
+	
+	// checks if word is less than the comparison node
 	else if (word < root->word) {
+		// goes to the left
 		root->left = insert(word, root->left, root);
 	}
 	else {
+		// goes to the right
 		root->right = insert(word, root->right, root);
 	}
-
+	
+	// checks if left rotation is necessary
 	if (isRed(root->right) && !isRed(root->left)) {
 		root = rotateLeft(root);
 	}
-
+	
+	// checks if right rotation is necessary
 	if (isRed(root->left) && isRed(root->left->left)) {
 		root = rotateRight(root);
 	}
-
+	
+	// checks if color flip is necessary
 	if (isRed(root->left) && isRed(root->right)) {
 		root->red = true;
 		root->left->red = false;
@@ -200,78 +219,102 @@ void RBTree::postorder(RBTNode* root, std::ostream& os) {
 	return;
 }
 
+// finds the count of how many times a word appears
 int RBTree::count(RBTNode* root, std::string key) {
+	
+	// checks if there is a root node
 	if (!root) {
 		return 0;
 	}
-
+	
+	// once the key is equal to a word, returns the count
 	if (key == root->word){
 		return root->counter;
 	}
-
-	if (key < root->word) {
+  
+	// goes to the left
+	if (areWordsInOrder(key, root->word)) {
 		return count(root->left, key);
 	}
+	
+	//goes to the right
 	else {
 		return count(root->right, key);
 	}
 }
 
+// returns count with the root and key
 int RBTree::count(std::string key) {
 	return count(root, key);
 }
 
+// destroys the tree from the leaves up
 void RBTree::destroy(RBTNode* root) {
+	// stops once there is no root
 	if (!root) {
 		return;
 	}
-
+	 // deletes nodes
 	this->destroy(root->left);
 	this->destroy(root->right);
 	delete root->left;
 	delete root->right;
 }
 
+// searches tree for specific word
 bool RBTree::search(std::string word, RBTNode* root) {
+	
+	// checks of there is a root
 	if (!root) {
 		return false;
 	}
-
+	
+	// checks if words are the same
 	if ((value(word) == value(root->word)) && (word == root->word)) {
 		return true;
 	}
-
+	
+	// checks child node to the left
 	if (word < root->word) {
 		return this->search(word, root->left);
 	}
+	
+	// checks child node to the right
 	else {
 		return this->search(word, root->right);
 	}
 }
 
+// performs a left loation
 RBTNode* RBTree::rotateLeft(RBTNode* root) {
+	
+	// changes directions of nodes
 	RBTNode* p = root->right;
-
 	root->right = root->right->left;
-
 	p->left = root;
-
+	
+	// color flips
 	p->red = p->left->red;
 	p->left->red = true;
 
 	return p;
 }
 
+// performs a right rotation
 RBTNode* RBTree::rotateRight(RBTNode* root) {
+	
+	//changes direction of nodes
 	RBTNode* p = root->left;
 	root->left = root->left->right;
 	p->right = root;
-
+	
+	//color flips
 	p->red = p->right->red;
 	p->right->red = true;
 	return p;
 }
 
+// checks the color of the node
 bool RBTree::isRed(RBTNode* node) {
 	if (!node) {
 		return false;
