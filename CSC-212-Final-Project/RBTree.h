@@ -15,26 +15,27 @@ class Renderer;
 
 class RBTNode {
 private:
+	// Constructors should be private to stop anything else from creating the nodes other
+	// than the tree.
 	RBTNode(Renderer* renderer, RBTNode* p);
 	RBTNode(Renderer* renderer, RBTNode* p, std::string word, bool color);
-	Renderer* renderer;
-	int counter;
+
+	Renderer* renderer; // access to the renderer in order to draw and register.
+	int counter; // word count
+	bool red;
+	float shapeSize = 25.0f;
 	RBTNode* left;
 	RBTNode* right;
 	RBTNode* parent;
 	sf::CircleShape shape;
-	float shapeSize = 25.0f;
 	sf::Vector2f position;
 	sf::Vector2f target;
-	bool red;
 	sf::Text text;
 
-	int xPos = 0, yPos = 0;
 
 	void update(long long int);
 
 public:
-	~RBTNode();
 
 	std::string word;
 	void draw(sf::RenderWindow*);
@@ -80,7 +81,6 @@ public:
 	RBTree(Renderer* renderer);
 	~RBTree();
 
-	int value(std::string word);
 	void insert(std::string word);
 	int height();
 

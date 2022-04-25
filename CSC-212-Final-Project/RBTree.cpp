@@ -56,18 +56,6 @@ RBTNode::RBTNode(Renderer* renderer, RBTNode* p, std::string word, bool color) {
 	text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 }
 
-RBTNode::~RBTNode() {}
-
-//Creates a value for a word
-int RBTree::value(std::string word) {
-	int sum = 0;
-	for (unsigned int i = 0; i < word.size(); i++) {
-		char x = tolower(word[i]);
-		sum += int(x);
-	}
-	return sum;
-}
-
 // returns true if word1 comes before word2. 
 bool areWordsInOrder(std::string word1, std::string word2) {;
 	return word1 < word2;
@@ -270,7 +258,7 @@ bool RBTree::search(std::string word, RBTNode* root) {
 	}
 	
 	// checks if words are the same
-	if ((value(word) == value(root->word)) && (word == root->word)) {
+	if (word == root->word) {
 		return true;
 	}
 	
@@ -387,6 +375,7 @@ void RBTree::postorder(std::ostream& os) {
 }
 
 bool RBTree::search(std::string word) {
+	std::transform(word.begin(), word.end(), word.begin(), [](unsigned char c) { return tolower(c); });
 	return this->search(word, this->root);
 }
 

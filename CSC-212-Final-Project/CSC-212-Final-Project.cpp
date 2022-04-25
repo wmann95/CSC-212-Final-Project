@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 		std::cout << "junglebook.txt" << std::endl;
 		std::cout << "samiam.txt" << std::endl;
 		std::cout << std::endl;
-		std::cout << "Please choose a book, or type the name of the file you added with the .exe: " << std::endl;
+		std::cout << "Please choose a book, or type the name of the file you added to the './books/' directory: " << std::endl;
 
 		std::cin >> filename;
 		std::cout << std::endl;
@@ -41,6 +41,32 @@ int main(int argc, char* argv[]) {
 		std::string filename = "/books/" + std::string(argv[1]);
 		words = ReadFile(filename); // get the wordlist.
 	}
+
+	int wordsPerSecond = 20;
+
+	double timeEstimate = (double)words.size() / (double)wordsPerSecond;
+
+	std::string timeEst = "error";
+	std::cout << words.size() << std::endl;
+
+	if (timeEstimate < 60.0) {
+		timeEst = std::to_string(timeEstimate) + " seconds.";
+	}
+	else if (timeEstimate < 60.0 * 60.0) {
+		int minutes = timeEstimate / 60;
+		int seconds = (int)timeEstimate % 60;
+
+		timeEst = std::to_string(minutes) + " minutes, " + std::to_string(seconds) + " seconds.";
+	}
+	else {
+		int hours = timeEstimate / 60;
+		int minutes = hours / 60;
+		int seconds = (int)timeEstimate % 60;
+
+		timeEst = std::to_string(hours) + " hours, " + std::to_string(minutes) + " minutes, " + std::to_string(seconds) + " seconds.";
+	}
+
+	std::cout << "Estimated time to completion (Time subject to computational power): " << timeEst << std::endl;
 
 	// Title the window should take. This will be used to easily add a FPS and UPS counter to the window title.
 	std::string title = "Left-Leaning Red-Black Trees";
@@ -195,7 +221,7 @@ int main(int argc, char* argv[]) {
 		}
 
 		// insert a word every 2/10's of a second.
-		if (textClock >= 10 && counter < words.size()) {
+		if (textClock >= 1000 / wordsPerSecond && counter < words.size()) {
 			if (!pauseFlag){
 				std::string tmp = words[counter++ % words.size()];
 				tree.insert(tmp);
@@ -229,7 +255,6 @@ int main(int argc, char* argv[]) {
 	}
 
 	// Zipfian analysis
-	std::cout << "Zipf" << std::endl;
 
 	std::vector<std::pair<std::string, int>> wordCounts;
 	std::vector<int> zipfPredict;
@@ -259,6 +284,24 @@ int main(int argc, char* argv[]) {
 	}
 
 	out.close();
+	std::cout << "Zipfian Analysis output to 'output.txt'" << std::endl;
+
+	// General tree checks to prove functionality.
+
+	std::cout << std::endl;
+	std::cout << "Checking tree functionality..." << std::endl;
+
+	std::cout << "'a': " << (tree.search("a") ? "true" : "false") << ", count: " << tree.count("a") << std::endl;
+	std::cout << "'the': " << (tree.search("the") ? "true" : "false") << ", count: " << tree.count("the") << std::endl;
+	std::cout << "'of': " << (tree.search("of") ? "true" : "false") << ", count: " << tree.count("of") << std::endl;
+	std::cout << "'if': " << (tree.search("if") ? "true" : "false") << ", count: " << tree.count("if") << std::endl;
+	std::cout << "'Test Case': " << (tree.search("Test Case") ? "true" : "false") << ", count: " << tree.count("Test Case") << std::endl;
+
+	std::cout << std::endl;
+
+	std::cout << "End tree height: " << tree.height() << std::endl;
+
+
 
 	return 0;
 }
