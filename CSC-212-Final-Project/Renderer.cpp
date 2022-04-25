@@ -10,11 +10,10 @@
 
 Renderer::Renderer(sf::RenderWindow* window) {
 	this->window = window;
-	if (!font.loadFromFile("Arial.ttf")) {
+	if (!font.loadFromFile("font.ttf")) {
 
-		std::cout << "ERROR LOADING FONT" << std::endl;
+		std::cout << "ERROR LOADING FONT: Is there a file named 'font.ttf' in the folder with the .exe? If not, add one." << std::endl;
 	}
-	std::cout << "Font loaded..." << std::endl;
 
 	int xSize = window->getSize().x;
 	int ySize = window->getSize().y;

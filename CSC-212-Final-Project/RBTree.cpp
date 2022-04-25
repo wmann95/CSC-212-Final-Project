@@ -65,11 +65,6 @@ int RBTree::value(std::string word) {
 	return sum;
 }
 
-// returns true if word1 comes before word2. 
-bool areWordsInOrder(std::string word1, std::string word2) {;
-	return word1 < word2;
-}
-
 RBTNode* RBTree::insert(std::string word, RBTNode* root, RBTNode* prev) {
 
 	if (!root) {
@@ -214,7 +209,7 @@ int RBTree::count(RBTNode* root, std::string key) {
 		return root->counter;
 	}
 
-	if (areWordsInOrder(key, root->word)) {
+	if (key < root->word) {
 		return count(root->left, key);
 	}
 	else {
