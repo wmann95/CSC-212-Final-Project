@@ -231,7 +231,7 @@ int RBTree::count(RBTNode* root, std::string key) {
 	if (key == root->word){
 		return root->counter;
 	}
-	
+  
 	// goes to the left
 	if (areWordsInOrder(key, root->word)) {
 		return count(root->left, key);

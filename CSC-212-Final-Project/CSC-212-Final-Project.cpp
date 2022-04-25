@@ -19,10 +19,27 @@ int main(int argc, char* argv[]) {
 	std::vector<std::string> words;
 
 	if (argc == 1) {
-		words = ReadFile("book.txt"); // get the wordlist.
+
+		// Request the user input a book to be read in.
+		std::string filename;
+
+		std::cout << "Default available books: " << std::endl;
+		std::cout << "greatgatsby.txt" << std::endl;
+		std::cout << "junglebook.txt" << std::endl;
+		std::cout << "samiam.txt" << std::endl;
+		std::cout << std::endl;
+		std::cout << "Please choose a book, or type the name of the file you added with the .exe: " << std::endl;
+
+		std::cin >> filename;
+		std::cout << std::endl;
+
+		filename = "books/" + filename;
+
+		words = ReadFile(filename); // get the wordlist.
 	}
 	else {
-		words = ReadFile(argv[1]); // get the wordlist.
+		std::string filename = "/books/" + std::string(argv[1]);
+		words = ReadFile(filename); // get the wordlist.
 	}
 
 	// Title the window should take. This will be used to easily add a FPS and UPS counter to the window title.
@@ -42,7 +59,7 @@ int main(int argc, char* argv[]) {
 
 	// How many frames per second and updates per second that should be done.
 	int fps = 60;
-	int ups = 30;
+	int ups = 60;
 
 	// How many frames/updates have happened since last frame/update.
 	int updates = 0;
@@ -82,7 +99,6 @@ int main(int argc, char* argv[]) {
 			}
 			// Check if the mouse wheel was moved.
 			if (event.type == sf::Event::MouseWheelMoved && !scrollLock) {
-				//std::cout << "Test" << std::endl;
 				if (event.mouseWheel.delta < 0) {
 					renderer.increaseScroll();
 				}
@@ -179,7 +195,7 @@ int main(int argc, char* argv[]) {
 		}
 
 		// insert a word every 2/10's of a second.
-		if (textClock >= 200 && counter < words.size()) {
+		if (textClock >= 10 && counter < words.size()) {
 			if (!pauseFlag){
 				std::string tmp = words[counter++ % words.size()];
 				tree.insert(tmp);
@@ -217,7 +233,6 @@ int main(int argc, char* argv[]) {
 
 	std::vector<std::pair<std::string, int>> wordCounts;
 	std::vector<int> zipfPredict;
-	std::vector<int> mandelbrotPredict;
 
 	tree.getWordCounts(&wordCounts);
 
@@ -225,14 +240,13 @@ int main(int argc, char* argv[]) {
 	std::sort(wordCounts.begin(), wordCounts.end(), [](std::pair<std::string, int> p1, std::pair<std::string, int> p2) {return p1.second > p2.second; });
 
 	zipfPredict.push_back(wordCounts[0].second);
-	mandelbrotPredict.push_back(wordCounts[0].second);
 
+	// Describes the 'order' of the elements in place. This value changes from book to book, but 1.1 was found to provide more accurate predictive capability.
 	double s = 1.1;
 
 	// Make predictions based on index in the list and the count of the first word
 	for (int i = 1; i < wordCounts.size(); i++) {
-		zipfPredict.push_back(((1.0 / pow(i + 1.0, s)) / (zeta(words.size(), s))) * wordCounts[0].second);
-		mandelbrotPredict.push_back(std::ceil((1.0 / ((double)i + 1 + 2.7) * wordCounts[0].second)));
+		zipfPredict.push_back(std::ceil(((1.0 / pow(i + 1.0, s)) / (zeta(words.size(), s))) * wordCounts[0].second));
 	}
 
 	std::ofstream out;
@@ -242,7 +256,6 @@ int main(int argc, char* argv[]) {
 	for (int i = 0; i < wordCounts.size(); i++) {
 		std::pair<std::string, int> p = wordCounts[i];
 		out << "'" << p.first << "' count: " << p.second << " || Zipfian prediction: " << zipfPredict[i] << " || Zipfian accuracy: " << (zipfPredict[i] > p.second ? (double)p.second / (double)zipfPredict[i] : (double)zipfPredict[i] / (double)p.second) << std::endl;
-		out << "'" << p.first << "' count: " << p.second << " || Mandelbrot prediction: " << mandelbrotPredict[i] << " || Mandelbrot accuracy: " << (mandelbrotPredict[i] > p.second ? (double)p.second / (double)mandelbrotPredict[i] : (double)mandelbrotPredict[i] / (double)p.second) << std::endl;
 	}
 
 	out.close();
@@ -250,6 +263,7 @@ int main(int argc, char* argv[]) {
 	return 0;
 }
 
+//This is not a true Reimann Zeta summation, as it doesn't go to infinity. Instead, it goes to the number of elements in the set.
 double zeta(double n, double s)
 {
 	double output = 0;
