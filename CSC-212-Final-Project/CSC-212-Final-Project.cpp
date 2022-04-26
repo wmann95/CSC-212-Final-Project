@@ -42,7 +42,8 @@ int main(int argc, char* argv[]) {
 		words = ReadFile(filename); // get the wordlist.
 	}
 
-	int wordsPerSecond = 20;
+	// how many words per second to go through
+	int wordsPerSecond = 5;
 
 	double timeEstimate = (double)words.size() / (double)wordsPerSecond;
 
@@ -220,7 +221,7 @@ int main(int argc, char* argv[]) {
 			frames++;
 		}
 
-		// insert a word every 2/10's of a second.
+		// insert a word according to the wordsPerSecond variable
 		if (textClock >= 1000 / wordsPerSecond && counter < words.size()) {
 			if (!pauseFlag){
 				std::string tmp = words[counter++ % words.size()];
